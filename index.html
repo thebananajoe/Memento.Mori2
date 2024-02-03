@@ -1,28 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mia Pagina con Dati Google Sheets</title>
     <style>
-        /* Aggiungi qui lo stile per centrare il contenuto */
-        .centro {
-            height: 100vh;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            width: 90%; /* Adatta alla larghezza desiderata, per esempio 90% per maggiore spazio ai lati */
+            max-width: 600px; /* Massima larghezza della colonna centrale */
+        }
+        #random-cell {
+            font-size: 24px; /* Aumenta la dimensione del font */
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px; /* Spazio tra il testo e il pulsante */
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-<div class="centro" id="random-cell">Caricamento...</div>
+<div class="container">
+    <div id="random-cell">Caricamento...</div>
+    <button onclick="fetchRandomCell()">Rigenera</button>
+</div>
 
 <script>
 async function fetchRandomCell() {
     const sheetId = '1BxbPEDPJcalOtcWTEYLenB9xCYMqm61xyL8OTQrs2rY';
     const apiKey = 'AIzaSyDw8x-foQghu9M_dwREfKMfmc1XsVMlbF0';
-    // Specifica lo sheet e il range qui
-    const range = 'Incontri!A2:A271'; // Sostituisci 'Foglio1' con il nome esatto del tuo sheet
+    const range = 'Incontri!A1:A271';
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
     try {
@@ -42,7 +73,6 @@ async function fetchRandomCell() {
     }
 }
 
-// Chiama la funzione quando la pagina è completamente caricata
 window.onload = fetchRandomCell;
 </script>
 
