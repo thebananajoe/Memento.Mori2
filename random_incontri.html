@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mia Pagina con Dati Google Sheets</title>
+    <style>
+        /* Aggiungi qui lo stile per centrare il contenuto */
+        .centro {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="centro" id="random-cell">Caricamento...</div>
+
+<script>
+async function fetchRandomCell() {
+    const sheetId = '1BxbPEDPJcalOtcWTEYLenB9xCYMqm61xyL8OTQrs2rY';
+    const apiKey = 'AIzaSyDw8x-foQghu9M_dwREfKMfmc1XsVMlbF0';
+    const range = 'A1:Z100'; // Adatta questo range al tuo caso d'uso
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const rows = data.values;
+        if (rows.length > 0) {
+            const randomRow = Math.floor(Math.random() * rows.length);
+            const randomCell = Math.floor(Math.random() * rows[randomRow].length);
+            document.getElementById('random-cell').textContent = rows[randomRow][randomCell];
+        } else {
+            document.getElementById('random-cell').textContent = 'Nessun dato trovato.';
+        }
+    } catch(error) {
+        console.error('Errore:', error);
+        document.getElementById('random-cell').textContent = 'Errore nel caricamento dei dati.';
+    }
+}
+
+// Chiama la funzione quando la pagina è completamente caricata
+window.onload = fetchRandomCell;
+</script>
+
+</body>
+</html>
