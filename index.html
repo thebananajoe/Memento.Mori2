@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mia Pagina con Dati Google Sheets e Mood</title>
+    <title>Mia Pagina con Dati Google Sheets, Mood e Lancio Dado</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,9 +45,10 @@
 <body>
 
 <div class="container">
-    <div id="random-cell" class="box">Caricamento...</div>
-    <div id="mood" class="box">Mood...</div>
-    <button onclick="fetchRandomCell()">Rigenera</button>
+    <div id="dice-result" class="box">Tira il dado...</div>
+    <div id="random-cell" class="box" style="display: none;">Caricamento...</div>
+    <div id="mood" class="box" style="display: none;">Mood...</div>
+    <button onclick="rollDice()">Tira il Dado</button>
 </div>
 
 <script>
@@ -65,15 +66,18 @@ async function fetchRandomCell() {
             const randomRow = Math.floor(Math.random() * rows.length);
             const randomCell = Math.floor(Math.random() * rows[randomRow].length);
             document.getElementById('random-cell').textContent = rows[randomRow][randomCell];
+            document.getElementById('random-cell').style.display = 'block';
+            generateMood();
         } else {
             document.getElementById('random-cell').textContent = 'Nessun dato trovato.';
+            document.getElementById('random-cell').style.display = 'none';
+            document.getElementById('mood').style.display = 'none';
         }
     } catch(error) {
         console.error('Errore:', error);
-        document.getElementById('random-cell').textContent = 'Errore nel caricamento dei dati.';
+        document.getElementById('random-cell').style.display = 'none';
+        document.getElementById('mood').style.display = 'none';
     }
-
-    generateMood();
 }
 
 function generateMood() {
@@ -85,20 +89,51 @@ function generateMood() {
             break;
         case 2:
         case 3:
-            mood = "Ostile, ma… (Le creature insultano o minacciano i PC, oppure gli attaccano se pensano di essere in vantaggio)";
+            mood = "Ostile, ma…";
             break;
         case 4:
         case 5:
-            mood = "Si può negoziare. (Le creature sono allerta, e valutano come si comportano i PC";
+            mood = "Si può negoziare.";
             break;
         case 6:
-            mood = "Amichevole, ma… (Le creature non attaccano se non provocate e potrebbero anche aiutare i PC con informazioni, cure, etc.)";
+            mood = "Amichevole, ma…";
             break;
     }
     document.getElementById('mood').textContent = mood;
+    document.getElementById('mood').style.display = 'block';
 }
 
-window.onload = fetchRandomCell;
+function rollDice() {
+    const roll = Math.ceil(Math.random() * 6);
+    let resultText;
+    switch (roll) {
+        case 1:
+            resultText = "I PC si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
+            document.getElementById('random-cell').style.display = 'none';
+            document.getElementById('mood').style.display = 'none';
+            break;
+        case 2:
+        case 3:
+        case 4:
+            resultText = "Incontro";
+            fetchRandomCell();
+            break;
+        case 5:
+            resultText = "Indizi su Incontro";
+            fetchRandomCell().then(() => {
+                document.getElementById('random-cell').textContent = "i PC trovano alcune tracce inerenti a " + document.getElementById('random-cell').textContent;
+            });
+            break;
+        case 6:
+            resultText = "Non succede nulla";
+            document.getElementById('random-cell').style.display = 'none';
+            document.getElementById('mood').style.display = 'none';
+            break;
+    }
+    document.getElementById('dice-result').textContent = resultText;
+}
+
+window.onload = rollDice; // Cambiato per mostrare "Tira il dado..." all'inizio
 </script>
 
 </body>
