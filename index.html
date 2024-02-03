@@ -69,7 +69,6 @@ async function fetchRandomCell() {
             const randomCell = Math.floor(Math.random() * rows[randomRow].length);
             document.getElementById('random-cell').textContent = rows[randomRow][randomCell];
             document.getElementById('random-cell').style.display = 'block';
-            generateMood();
         } else {
             document.getElementById('random-cell').textContent = 'Nessun dato trovato.';
             document.getElementById('random-cell').style.display = 'none';
@@ -85,54 +84,42 @@ async function fetchRandomCell() {
 }
 
 function generateMood() {
-    const roll = Math.ceil(Math.random() * 6); // Genera un numero tra 1 e 6
-    let mood;
+    const roll = Math.ceil(Math.random() * 3); // Genera un numero tra 1 e 3 per selezionare il mood
+    let moodDescriptions;
     let backgroundColor;
-    switch (roll) {
-        case 1:
-            mood = "Attacca immediatamente";
-            backgroundColor = "red";
-            break;
-        case 2:
-        case 3:
-            // Seleziona casualmente uno dei mood "Ostili"
-            const hostileOptions = [
-                "Le creature sono aggressive, Insultano chiunque incroci il loro cammino e attaccando se si sentono in vantaggio",
-                "richiedendo cibo o soldi come tributo. Se si sentono in vantaggio, passano all'attacco.",
-                "Si mostrano violenti, e ricattano i PC per lasciarli in pace. Attaccheranno se credono di poter vincere.",
-                "sono provocatori ed aggressivi, cercando il confronto diretto, minacciando ed insultando i PC"
-            ];
-            mood = hostileOptions[Math.floor(Math.random() * hostileOptions.length)];
-            backgroundColor = "orange";
-            break;
-        case 4:
-            // Seleziona casualmente uno dei mood "Neutrali"
-            const neutralOptions = [
-                "Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.",
-                "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.",
-                "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."
-            ];
-            mood = neutralOptions[Math.floor(Math.random() * neutralOptions.length)];
-            backgroundColor = "yellow";
-            break;
-        case 5:
-        case 6:
-            // Seleziona casualmente uno dei mood "Amichevoli"
-            const friendlyOptions = [
-                "Sono disposti a condividere informazioni e assistenza.",
-                "Sono disposti a fornire ai PC cibo, acqua o cure.",
-                "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.",
-                "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."
-            ];
-            mood = friendlyOptions[Math.floor(Math.random() * friendlyOptions.length)];
-            backgroundColor = "green";
-            break;
+    if (roll === 1) { // Ostili
+        moodDescriptions = [
+            "Le creature sono aggressive, insultano chiunque incroci il loro cammino e attaccano se si sentono in vantaggio.",
+            "Richiedono cibo o soldi come tributo. Se si sentono in vantaggio, passano all'attacco.",
+            "Si mostrano violenti, e ricattano i PC per lasciarli in pace. Attaccheranno se credono di poter vincere.",
+            "Sono provocatori ed aggressivi, cercando il confronto diretto, minacciando ed insultando i PC."
+        ];
+        backgroundColor = "orange";
+    } else if (roll === 2) { // Neutrali
+        moodDescriptions = [
+            "Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.",
+            "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.",
+            "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."
+        ];
+        backgroundColor = "yellow";
+    } else { // Amichevoli
+        moodDescriptions = [
+            "Sono disposti a condividere informazioni e assistenza.",
+            "Sono disposti a fornire ai PC cibo, acqua o cure.",
+            "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.",
+            "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."
+        ];
+        backgroundColor = "green";
     }
+    const mood = moodDescriptions[Math.floor(Math.random() * moodDescriptions.length)];
     document.getElementById('mood').textContent = mood;
     document.getElementById('mood').style.display = 'block';
     changeBackgroundColor(backgroundColor);
 }
 
+function changeBackgroundColor(color) {
+    document.body.style.backgroundColor = color;
+}
 
 function determineFirstSight() {
     const probabilityRoll = Math.random(); // Genera un numero casuale tra 0 e 1
@@ -162,6 +149,7 @@ function rollDice() {
             resultText = "Incontro";
             fetchRandomCell(); // Carica i dettagli dell'incontro
             determineFirstSight(); // Determina chi vede per primo
+            generateMood(); // Genera il mood dopo aver determinato il primo avvistamento
             break;
         case 5:
             resultText = "Indizi su Incontro";
