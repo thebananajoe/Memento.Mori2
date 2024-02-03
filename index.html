@@ -57,7 +57,7 @@
 async function fetchRandomCell() {
     const sheetId = '1BxbPEDPJcalOtcWTEYLenB9xCYMqm61xyL8OTQrs2rY';
     const apiKey = 'AIzaSyDw8x-foQghu9M_dwREfKMfmc1XsVMlbF0';
-    const range = 'Incontri!A1:A271'; // Aggiornato per puntare allo specifico range
+    const range = 'Incontri!A1:A271';
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
     try {
@@ -66,107 +66,68 @@ async function fetchRandomCell() {
         if (data.values && data.values.length > 0) {
             const rows = data.values;
             const randomRow = Math.floor(Math.random() * rows.length);
-            const randomCell = Math.floor(Math.random() * rows[randomRow].length);
-            document.getElementById('random-cell').textContent = rows[randomRow][randomCell];
+            document.getElementById('random-cell').textContent = rows[randomRow];
             document.getElementById('random-cell').style.display = 'block';
         } else {
             document.getElementById('random-cell').textContent = 'Nessun dato trovato.';
             document.getElementById('random-cell').style.display = 'none';
-            document.getElementById('mood').style.display = 'none';
-            document.getElementById('first-sight').style.display = 'none';
         }
     } catch(error) {
         console.error('Errore:', error);
         document.getElementById('random-cell').style.display = 'none';
-        document.getElementById('mood').style.display = 'none';
-        document.getElementById('first-sight').style.display = 'none';
     }
 }
 
-function generateMood() {
-    const roll = Math.ceil(Math.random() * 3); // Genera un numero tra 1 e 3 per selezionare il mood
-    let moodDescriptions;
-    let backgroundColor;
-    if (roll === 1) { // Ostili
-        moodDescriptions = [
+function rollDice() {
+    const roll = Math.ceil(Math.random() * 6);
+    let mood, backgroundColor, moodDetail;
+    document.getElementById('mood').style.display = 'none';
+    document.getElementById('random-cell').style.display = 'none';
+    document.getElementById('first-sight').style.display = 'none';
+
+    if (roll === 1) {
+        mood = "Attacca immediatamente.";
+        backgroundColor = "red";
+        moodDetail = "";
+    } else if (roll === 2 || roll === 3) {
+        const hostileOptions = [
             "Le creature sono aggressive, insultano chiunque incroci il loro cammino e attaccano se si sentono in vantaggio.",
             "Richiedono cibo o soldi come tributo. Se si sentono in vantaggio, passano all'attacco.",
             "Si mostrano violenti, e ricattano i PC per lasciarli in pace. Attaccheranno se credono di poter vincere.",
             "Sono provocatori ed aggressivi, cercando il confronto diretto, minacciando ed insultando i PC."
         ];
+        mood = "Ostili:";
+        moodDetail = hostileOptions[Math.floor(Math.random() * hostileOptions.length)];
         backgroundColor = "orange";
-    } else if (roll === 2) { // Neutrali
-        moodDescriptions = [
+    } else if (roll === 4 || roll === 5) {
+        const neutralOptions = [
             "Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.",
             "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.",
             "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."
         ];
+        mood = "Neutrali:";
+        moodDetail = neutralOptions[Math.floor(Math.random() * neutralOptions.length)];
         backgroundColor = "yellow";
-    } else { // Amichevoli
-        moodDescriptions = [
+    } else {
+        const friendlyOptions = [
             "Sono disposti a condividere informazioni e assistenza.",
             "Sono disposti a fornire ai PC cibo, acqua o cure.",
             "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.",
             "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."
         ];
+        mood = "Amichevoli:";
+        moodDetail = friendlyOptions[Math.floor(Math.random() * friendlyOptions.length)];
         backgroundColor = "green";
     }
-    const mood = moodDescriptions[Math.floor(Math.random() * moodDescriptions.length)];
-    document.getElementById('mood').textContent = mood;
+
+    document.getElementById('dice-result').textContent = mood;
+    document.getElementById('mood').textContent = moodDetail;
     document.getElementById('mood').style.display = 'block';
-    changeBackgroundColor(backgroundColor);
-}
+    document.body.style.backgroundColor = backgroundColor;
 
-function changeBackgroundColor(color) {
-    document.body.style.backgroundColor = color;
-}
-
-function determineFirstSight() {
-    const probabilityRoll = Math.random(); // Genera un numero casuale tra 0 e 1
-    let sightText;
-    if (probabilityRoll < 0.7) { // 70% di probabilità
-        sightText = "Vi vedono loro per primi";
-    } else { // 30% di probabilità
-        sightText = "Li vedete voi per primi";
+    if (roll === 2 || roll === 3 || roll === 4 || roll === 5 || roll === 6) {
+        fetchRandomCell();
     }
-    document.getElementById('first-sight').textContent = sightText;
-    document.getElementById('first-sight').style.display = 'block';
-}
-
-function rollDice() {
-    const roll = Math.ceil(Math.random() * 6);
-    let resultText;
-    switch (roll) {
-        case 1:
-            resultText = "I PC si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
-            document.getElementById('random-cell').style.display = 'none';
-            document.getElementById('mood').style.display = 'none';
-            document.getElementById('first-sight').style.display = 'none';
-            break;
-        case 2:
-        case 3:
-        case 4:
-            resultText = "Incontro";
-            fetchRandomCell(); // Carica i dettagli dell'incontro
-            determineFirstSight(); // Determina chi vede per primo
-            generateMood(); // Genera il mood dopo aver determinato il primo avvistamento
-            break;
-        case 5:
-            resultText = "Indizi su Incontro";
-            fetchRandomCell().then(() => {
-                document.getElementById('random-cell').textContent = "i PC trovano alcune tracce inerenti a " + document.getElementById('random-cell').textContent;
-            });
-            document.getElementById('first-sight').style.display = 'none';
-            break;
-        case 6:
-            resultText = "Non succede nulla";
-            document.getElementById('random-cell').style.display = 'none';
-            document.getElementById('mood').style.display = 'none';
-            document.getElementById('first-sight').style.display = 'none';
-            break;
-    }
-    document.getElementById('dice-result').textContent = resultText;
-    changeBackgroundColor('#f5f5f5'); // Resetta il colore di sfondo per i casi in cui non si verifica un incontro
 }
 
 window.onload = rollDice;
