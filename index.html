@@ -83,25 +83,36 @@ async function fetchRandomCell() {
 function generateMood() {
     const roll = Math.ceil(Math.random() * 6); // Genera un numero tra 1 e 6
     let mood;
+    let backgroundColor;
     switch (roll) {
         case 1:
             mood = "Attacca immediatamente";
+            backgroundColor = "red"; // Rosso per "Attacca"
             break;
         case 2:
         case 3:
             mood = "Ostile, ma…";
+            backgroundColor = "orange"; // Arancione per "Ostile"
             break;
         case 4:
         case 5:
             mood = "Si può negoziare.";
+            backgroundColor = "yellow"; // Giallo per "Negoziare"
             break;
         case 6:
             mood = "Amichevole, ma…";
+            backgroundColor = "green"; // Verde per "Amichevole"
             break;
     }
     document.getElementById('mood').textContent = mood;
     document.getElementById('mood').style.display = 'block';
+    changeBackgroundColor(backgroundColor);
 }
+
+function changeBackgroundColor(color) {
+    document.body.style.backgroundColor = color;
+}
+
 
 function rollDice() {
     const roll = Math.ceil(Math.random() * 6);
