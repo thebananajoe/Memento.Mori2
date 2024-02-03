@@ -91,21 +91,41 @@ function generateMood() {
     switch (roll) {
         case 1:
             mood = "Attacca immediatamente";
-            backgroundColor = "red"; // Rosso per "Attacca"
+            backgroundColor = "red";
             break;
         case 2:
         case 3:
-            mood = "Ostile, ma…";
-            backgroundColor = "orange"; // Arancione per "Ostile"
+            // Seleziona casualmente uno dei mood "Ostili"
+            const hostileOptions = [
+                "Le creature sono aggressive, Insultano chiunque incroci il loro cammino e attaccando se si sentono in vantaggio",
+                "richiedendo cibo o soldi come tributo. Se si sentono in vantaggio, passano all'attacco.",
+                "Si mostrano violenti, e ricattano i PC per lasciarli in pace. Attaccheranno se credono di poter vincere.",
+                "sono provocatori ed aggressivi, cercando il confronto diretto, minacciando ed insultando i PC"
+            ];
+            mood = hostileOptions[Math.floor(Math.random() * hostileOptions.length)];
+            backgroundColor = "orange";
             break;
         case 4:
-        case 5:
-            mood = "Si può negoziare.";
-            backgroundColor = "yellow"; // Giallo per "Negoziare"
+            // Seleziona casualmente uno dei mood "Neutrali"
+            const neutralOptions = [
+                "Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.",
+                "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.",
+                "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."
+            ];
+            mood = neutralOptions[Math.floor(Math.random() * neutralOptions.length)];
+            backgroundColor = "yellow";
             break;
+        case 5:
         case 6:
-            mood = "Amichevole, ma…";
-            backgroundColor = "green"; // Verde per "Amichevole"
+            // Seleziona casualmente uno dei mood "Amichevoli"
+            const friendlyOptions = [
+                "Sono disposti a condividere informazioni e assistenza.",
+                "Sono disposti a fornire ai PC cibo, acqua o cure.",
+                "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.",
+                "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."
+            ];
+            mood = friendlyOptions[Math.floor(Math.random() * friendlyOptions.length)];
+            backgroundColor = "green";
             break;
     }
     document.getElementById('mood').textContent = mood;
@@ -113,9 +133,6 @@ function generateMood() {
     changeBackgroundColor(backgroundColor);
 }
 
-function changeBackgroundColor(color) {
-    document.body.style.backgroundColor = color;
-}
 
 function determineFirstSight() {
     const probabilityRoll = Math.random(); // Genera un numero casuale tra 0 e 1
