@@ -14,6 +14,7 @@
             align-items: center;
             height: 100vh;
             background-color: #f5f5f5;
+            transition: background-color 0.5s ease;
         }
         .container {
             text-align: center;
@@ -48,6 +49,7 @@
     <div id="dice-result" class="box">Tira il dado...</div>
     <div id="random-cell" class="box" style="display: none;">Caricamento...</div>
     <div id="mood" class="box" style="display: none;">Mood...</div>
+    <div id="first-sight" class="box" style="display: none;">Primo incontro...</div>
     <button onclick="rollDice()">Tira il Dado</button>
 </div>
 
@@ -55,7 +57,7 @@
 async function fetchRandomCell() {
     const sheetId = '1BxbPEDPJcalOtcWTEYLenB9xCYMqm61xyL8OTQrs2rY';
     const apiKey = 'AIzaSyDw8x-foQghu9M_dwREfKMfmc1XsVMlbF0';
-    const range = 'Incontri!A1:A271';
+    const range = 'Incontri!A1:A271'; // Aggiornato per puntare allo specifico range
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
     try {
@@ -72,11 +74,13 @@ async function fetchRandomCell() {
             document.getElementById('random-cell').textContent = 'Nessun dato trovato.';
             document.getElementById('random-cell').style.display = 'none';
             document.getElementById('mood').style.display = 'none';
+            document.getElementById('first-sight').style.display = 'none';
         }
     } catch(error) {
         console.error('Errore:', error);
         document.getElementById('random-cell').style.display = 'none';
         document.getElementById('mood').style.display = 'none';
+        document.getElementById('first-sight').style.display = 'none';
     }
 }
 
@@ -113,6 +117,17 @@ function changeBackgroundColor(color) {
     document.body.style.backgroundColor = color;
 }
 
+function determineFirstSight() {
+    const probabilityRoll = Math.random(); // Genera un numero casuale tra 0 e 1
+    let sightText;
+    if (probabilityRoll < 0.7) { // 70% di probabilità
+        sightText = "Vi vedono loro per primi";
+    } else { // 30% di probabilità
+        sightText = "Li vedete voi per primi";
+    }
+    document.getElementById('first-sight').textContent = sightText;
+    document.getElementById('first-sight').style.display = 'block';
+}
 
 function rollDice() {
     const roll = Math.ceil(Math.random() * 6);
@@ -122,29 +137,34 @@ function rollDice() {
             resultText = "I PC si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
             document.getElementById('random-cell').style.display = 'none';
             document.getElementById('mood').style.display = 'none';
+            document.getElementById('first-sight').style.display = 'none';
             break;
         case 2:
         case 3:
         case 4:
             resultText = "Incontro";
-            fetchRandomCell();
+            fetchRandomCell(); // Carica i dettagli dell'incontro
+            determineFirstSight(); // Determina chi vede per primo
             break;
         case 5:
             resultText = "Indizi su Incontro";
             fetchRandomCell().then(() => {
                 document.getElementById('random-cell').textContent = "i PC trovano alcune tracce inerenti a " + document.getElementById('random-cell').textContent;
             });
+            document.getElementById('first-sight').style.display = 'none';
             break;
         case 6:
             resultText = "Non succede nulla";
             document.getElementById('random-cell').style.display = 'none';
             document.getElementById('mood').style.display = 'none';
+            document.getElementById('first-sight').style.display = 'none';
             break;
     }
     document.getElementById('dice-result').textContent = resultText;
+    changeBackgroundColor('#f5f5f5'); // Resetta il colore di sfondo per i casi in cui non si verifica un incontro
 }
 
-window.onload = rollDice; // Cambiato per mostrare "Tira il dado..." all'inizio
+window.onload = rollDice;
 </script>
 
 </body>
