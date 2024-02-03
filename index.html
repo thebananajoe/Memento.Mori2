@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mia Pagina con Dati Google Sheets</title>
+    <title>Mia Pagina con Dati Google Sheets e Mood</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,16 +17,16 @@
         }
         .container {
             text-align: center;
-            width: 90%; /* Adatta alla larghezza desiderata, per esempio 90% per maggiore spazio ai lati */
-            max-width: 600px; /* Massima larghezza della colonna centrale */
+            width: 90%;
+            max-width: 600px;
         }
-        #random-cell {
-            font-size: 24px; /* Aumenta la dimensione del font */
+        .box {
+            font-size: 20px;
             padding: 20px;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px; /* Spazio tra il testo e il pulsante */
+            margin-bottom: 20px;
         }
         button {
             font-size: 20px;
@@ -34,7 +34,7 @@
             border: none;
             border-radius: 5px;
             background-color: #007bff;
-            color: #ffffff;
+            color: white;
             cursor: pointer;
         }
         button:hover {
@@ -45,7 +45,8 @@
 <body>
 
 <div class="container">
-    <div id="random-cell">Caricamento...</div>
+    <div id="random-cell" class="box">Caricamento...</div>
+    <div id="mood" class="box">Mood...</div>
     <button onclick="fetchRandomCell()">Rigenera</button>
 </div>
 
@@ -71,6 +72,30 @@ async function fetchRandomCell() {
         console.error('Errore:', error);
         document.getElementById('random-cell').textContent = 'Errore nel caricamento dei dati.';
     }
+
+    generateMood();
+}
+
+function generateMood() {
+    const roll = Math.ceil(Math.random() * 6); // Genera un numero tra 1 e 6
+    let mood;
+    switch (roll) {
+        case 1:
+            mood = "Attacca immediatamente";
+            break;
+        case 2:
+        case 3:
+            mood = "Ostile, ma…";
+            break;
+        case 4:
+        case 5:
+            mood = "Si può negoziare.";
+            break;
+        case 6:
+            mood = "Amichevole, ma…";
+            break;
+    }
+    document.getElementById('mood').textContent = mood;
 }
 
 window.onload = fetchRandomCell;
