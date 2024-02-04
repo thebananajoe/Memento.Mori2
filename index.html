@@ -20,11 +20,11 @@
             padding: 20px;
             box-sizing: border-box;
         }
-        .content-box {
-            background-color: #cccccc; /* Grigio chiaro per differenziare i contenuti */
-            margin-top: 5px;
-            padding: 10px;
-        }
+      .content-box {
+          background-color: #e0e0e0; /* Un grigio più chiaro per i contenuti */
+          margin-top: 5px;
+          padding: 10px;
+      }
         .box, .button {
             font-size: 16px;
             padding: 15px 20px;
@@ -61,42 +61,49 @@
     <div id="outcome" class="box" style="display: none;">Esito...</div>
     <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
     <div class="button" onclick="generateDungeon()">Dungeon</div>
-    <div id="dungeon-container"></div>
+    <div id="dungeon-container" class="container"></div>
 </div>
 
 <script>
 async function generateDungeon() {
-    // Svuota il contenitore esistente
     const dungeonContainer = document.getElementById('dungeon-container');
-    dungeonContainer.innerHTML = '';
+    dungeonContainer.innerHTML = ''; // Pulisci il contenitore precedente
 
-    // Determina il numero di stanze
-    const roomCount = Math.floor(Math.random() * 4) + 2; // Da 2 a 5 stanze
+    const roomCount = Math.floor(Math.random() * 4) + 2; // Genera un numero casuale di stanze da 2 a 5
 
     for (let i = 0; i < roomCount; i++) {
-        // Crea un div per ogni stanza
+        const roomTitle = i === 0 ? "Ingresso" : i === roomCount - 1 ? "Stanza boss" : `Stanza ${i + 1}`;
+        // Supponendo che le descrizioni delle stanze siano in 'Dungeon!A2:A100' (ad esempio)
+        const roomDescription = await fetchFromSheet(`Dungeon!A${Math.floor(Math.random() * 99) + 2}`);
+        
+        // Crea un div per la stanza e aggiungi la descrizione
         const roomDiv = document.createElement('div');
         roomDiv.classList.add('box');
-        const roomType = i === 0 ? 'Ingresso' : i === roomCount - 1 ? 'Stanza boss' : `Stanza ${i}`;
-        roomDiv.innerHTML = `<strong>${roomType}:</strong> `; // Modifica con la descrizione appropriata dalla tua sheet
+        roomDiv.innerHTML = `${roomTitle}: ${roomDescription}`;
         dungeonContainer.appendChild(roomDiv);
 
-        // Contenuto della stanza: tesoro o incontro
-        const contentDiv = document.createElement('div');
-        contentDiv.classList.add('box', 'content-box');
-        const roll = Math.ceil(Math.random() * 6);
-        if (roll <= 2) {
-            // Tesoro
-            const treasureText = await fetchFromSheet('Tesori!A1:A100'); // Assumi che 'Tesori' sia il nome del tuo foglio e A1:A100 il range
-            contentDiv.innerHTML = `<strong>Tesoro:</strong> ${treasureText}`;
-        } else {
-            // Incontro
-            const encounterOutcome = await handleEncounter(); // Utilizza la funzione esistente per determinare il tipo di incontro
-            contentDiv.innerHTML = `<strong>Incontro:</strong> ${encounterOutcome}`;
-            // Qui potresti voler aggiungere ulteriori dettagli basati sul tipo di incontro
-        }
-        dungeonContainer.appendChild(contentDiv);
+        // Determina il contenuto della stanza (tesoro o incontro)
+        await determineRoomContent(dungeonContainer);
     }
+}
+
+// Assumi che questa funzione determini se una stanza contiene un tesoro o un incontro
+async function determineRoomContent(container) {
+    const roll = Math.ceil(Math.random() * 6);
+    const contentDiv = document.createElement('div');
+    contentDiv.classList.add('box', 'content-box'); // Usa 'content-box' per stili specifici
+
+    if (roll <= 2) {
+        // Tesoro: seleziona una riga a caso dalla sheet 'Tesori'
+        const treasureText = await fetchFromSheet('Tesori!A1:A100');
+        contentDiv.innerHTML = `<strong>Tesoro:</strong> ${treasureText}`;
+    } else {
+        // Incontro: utilizza la funzione 'handleEncounter' esistente per determinare il tipo di incontro
+        const encounterOutcome = await handleEncounter(); // Assume che questa funzione restituisca una descrizione dell'incontro
+        contentDiv.innerHTML = `<strong>Incontro:</strong> ${encounterOutcome}`;
+    }
+
+    container.appendChild(contentDiv);
 }
 
 async function fetchFromSheet(range) {
