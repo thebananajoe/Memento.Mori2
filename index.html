@@ -66,6 +66,9 @@
 
 <script>
 async function determineRoomContent() {
+    const d4Roll = Math.ceil(Math.random() * 4); // Determina il contenuto principale della stanza
+    const d6Roll = Math.ceil(Math.random() * 6); // Decide se c'è un Incontro, niente, o un Tesoro
+    
     let contentHTML = ""; // Inizializza la stringa che conterrà il contenuto HTML
     const d4Roll = Math.ceil(Math.random() * 4); // Tira un d4
     const d6Roll = Math.ceil(Math.random() * 6); // Tira un d6
@@ -92,9 +95,9 @@ async function determineRoomContent() {
 
     // Secondo d6 per decidere se c'è un Incontro, niente, o un Tesoro
     if (d6Roll === 1) {
-        // Incontro
-        const encounterOutcome = await handleEncounter();
-        contentHTML += encounterOutcome;
+        const encounterDescription = await fetchFromSheet('Incontri!A1:A100'); // Aggiungi la descrizione specifica dell'incontro
+        const encounterOutcome = await handleEncounter(); // Ottiene il tipo di incontro (es. Ostile, Amichevole)
+        contentHTML += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
     } else if (d6Roll === 6) {
         // Tesoro
         const treasureText = await fetchFromSheet('Dungeon!E1:E7');
@@ -113,8 +116,15 @@ async function generateDungeon() {
 
     const roomCount = Math.floor(Math.random() * 4) + 2; // Genera un numero casuale di stanze da 2 a 5
 
-    for (let i = 0; i < roomCount; i++) {
-        const roomTitle = i === 0 ? "Ingresso" : i === roomCount - 1 ? "Stanza boss" : `Stanza ${i + 1}`;
+     for (let i = 0; i < roomCount; i++) {
+        let roomTitle;
+        if (i === 0) {
+            roomTitle = "Ingresso";
+        } else if (i === roomCount - 1) {
+            roomTitle = "Stanza boss";
+        } else {
+            roomTitle = `Stanza ${i}`;
+        }
         const roomDescription = await fetchFromSheet('Dungeon!F2:F7');
 
         // Crea un div per la stanza e aggiungi la descrizione
