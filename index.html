@@ -75,7 +75,7 @@ async function determineRoomContent() {
     switch (d4Roll) {
         case 1:
             const puzzleText = await fetchFromSheet('Dungeon!A2:A7');
-            contentHTML += `La stanza contiene un Puzzle: ${puzzleText}<br><br>`;
+            contentHTML += `Per uscire dalla stanza bisogna risolvere un puzzle: ${puzzleText}<br><br>`;
             break;
         case 2:
             const trapText = await fetchFromSheet('Dungeon!B2:B7');
@@ -83,11 +83,11 @@ async function determineRoomContent() {
             break;
         case 3:
             const obstacleText = await fetchFromSheet('Dungeon!C2:C7');
-            contentHTML += `La stanza contiene un Ostacolo: ${obstacleText}<br><br>`;
+            contentHTML += `La stanza è ${obstacleText}<br><br>`;
             break;
         case 4:
             const anomalyText = await fetchFromSheet('Dungeon!D2:D7');
-            contentHTML += `La stanza contiene un'Anomalia: ${anomalyText}<br><br>`;
+            contentHTML += `La stanza è ${anomalyText}<br><br>`;
             break;
     }
 
@@ -99,7 +99,7 @@ async function determineRoomContent() {
     } else if (d6Roll === 6) {
         // Tesoro
         const treasureText = await fetchFromSheet('Dungeon!E1:E7');
-        contentHTML += `La stanza contiene un Tesoro: ${treasureText}`;
+        contentHTML += `Nella stanza c'è ${treasureText}`;
     }
 
     // Se d6Roll è tra 2 e 5, non aggiungere niente (niente)
@@ -122,7 +122,7 @@ async function generateDungeon() {
         if (i === 0) {
             roomTitle = "Ingresso";
         } else if (i === roomCount - 1) {
-            roomTitle = "Stanza boss";
+            roomTitle = "Uscita";
         } else {
             roomTitle = `Stanza ${i}`;
         }
@@ -163,11 +163,13 @@ async function fetchFromSheet(range) {
 }
 
 async function rollForWilderness() {
-    // Nasconde o resetta i box non correlati
     document.getElementById('dungeon-container').innerHTML = ''; // Resetta il contenuto di dungeon
-    // Il resto della funzione rimane invariato
+    document.getElementById('outcome').style.display = 'none';
+    document.getElementById('encounter-nature').style.display = 'none';
+
     const roll = Math.ceil(Math.random() * 6);
-    let incontriText = ""; // Inizializza come stringa vuota
+    let incontriText = "";
+    let visibilityOutcome = ""; // Nuova variabile per il risultato della visibilità
 
     switch (roll) {
         case 1:
@@ -178,9 +180,19 @@ async function rollForWilderness() {
         case 4:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
             const encounterOutcome = await handleEncounter();
+            const visibilityRoll = Math.random() < 0.5; // 50-50 chance
+            visibilityOutcome = visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro.";
+
+            // Aggiorna i box con il testo dell'incontro e il mood
             document.getElementById('outcome').textContent = "Incontrate: " + incontriText;
             document.getElementById('encounter-nature').textContent = encounterOutcome;
             document.getElementById('encounter-nature').style.display = 'block';
+
+            // Crea un nuovo div per il risultato della visibilità
+            const visibilityDiv = document.createElement('div');
+            visibilityDiv.classList.add('box');
+            visibilityDiv.textContent = visibilityOutcome;
+            document.body.appendChild(visibilityDiv); // Aggiungi il div al body o a un contenitore specifico
             break;
         case 5:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
@@ -201,7 +213,7 @@ async function handleEncounter() {
 
     switch (roll) {
         case 1:
-            mood = "Attacca immediatamente.";
+            mood = "Vi Attacca immediatamente.";
             break;
         case 2:
         case 3:
