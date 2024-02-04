@@ -236,19 +236,20 @@ async function getMoodDetail(mood) {
 
 
 async function setEnvironment(choice) {
-    // Nasconde i box non correlati o li resetta
-    document.getElementById('outcome').style.display = 'none';
-    document.getElementById('dungeon-container').innerHTML = ''; // Assicurati che il contenuto di dungeon sia resettato
+    // Resetta i box per le altre scelte
+    document.getElementById('dungeon-container').innerHTML = ''; // Resetta il contenuto di dungeon
     document.getElementById('encounter-nature').style.display = 'none'; // Nasconde il box natura dell'incontro
+    document.getElementById('outcome').style.display = 'none'; // Nasconde il box di esito prima di impostare nuovo contenuto
 
     if (choice === 'Urban') {
-       const prefixedText = "Appena entrate nel centro abitato notate " + urbanText;
+        const urbanText = await fetchFromSheet('Urban!B1:B271'); // Assicurati che questo range sia corretto
+        const prefixedText = "Appena entrate nel centro abitato notate: " + urbanText;
         document.getElementById('outcome').textContent = prefixedText;
         document.getElementById('outcome').style.display = 'block';
     } else if (choice === 'Wilderness') {
-        await rollForWilderness(); // Assicurati che questa funzione gestisca anche la visualizzazione
+        await rollForWilderness(); // Continua a gestire wilderness come prima
     }
-    // Non hai bisogno di chiamare generateDungeon qui poiché ha il suo pulsante
+    // La generazione di Dungeon ha il suo pulsante e viene gestita separatamente
 }
 </script>
 
