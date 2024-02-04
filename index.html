@@ -64,16 +64,25 @@
 async function generateDungeon() {
     document.getElementById('outcome').style.display = 'none';
     document.getElementById('encounter-nature').style.display = 'none';
-    document.getElementById('dungeon-room').style.display = 'none'; // Nascondi il div della stanza di dungeon
+    document.getElementById('dungeon-room').style.display = 'none';
+
+    // Definisci il prompt che vuoi inviare
+    const prompt = "Descrivi una stanza di un dungeon";
 
     // Richiesta all'API di GPT per generare la stanza di dungeon
-const response = await fetch('https://dungeon-generator-api-gpt.glitch.me/generate-dungeon', { method: 'POST' });
+    const response = await fetch('http://localhost:3000/generate-text', { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ prompt: prompt }) // Invia il prompt al tuo server
+    });
     const data = await response.json();
 
     // Mostra la stanza di dungeon generata
-    if (data && data.room) {
-        document.getElementById('dungeon-room').textContent = data.room;
-        document.getElementById('dungeon-room').style.display = 'block'; // Visualizza il div della stanza di dungeon
+    if (data && data.text) { // Assicurati che qui corrisponda alla chiave della risposta del tuo server
+        document.getElementById('dungeon-room').textContent = data.text;
+        document.getElementById('dungeon-room').style.display = 'block';
     } else {
         document.getElementById('dungeon-room').textContent = 'Errore nella generazione della stanza.';
     }
