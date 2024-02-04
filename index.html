@@ -165,55 +165,41 @@ async function fetchFromSheet(range) {
 async function rollForWilderness() {
     // Resetta i box per le altre scelte
     document.getElementById('dungeon-container').innerHTML = '';
-    document.getElementById('outcome').innerHTML = ''; // Usa innerHTML per resettare il contenuto
     document.getElementById('encounter-nature').style.display = 'none';
+    document.getElementById('outcome').style.display = 'none';
+    document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
 
     const roll = Math.ceil(Math.random() * 6);
     let incontriText = "";
-
-    // Crea i div per "incontri", "mood" e "visibilità"
-    let encounterDiv = document.createElement('div');
-    encounterDiv.classList.add('box', 'spacing-below');
-
-    let moodDiv = document.createElement('div');
-    moodDiv.classList.add('box', 'spacing-below');
-
-    let visibilityDiv = document.createElement('div');
-    visibilityDiv.classList.add('box', 'spacing-below');
+    let encounterContent = ""; // Utilizza questa variabile per accumulare il contenuto
 
     switch (roll) {
         case 1:
-            encounterDiv.innerHTML = "I PG si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
+            encounterContent = "I PG si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
             break;
         case 2:
         case 3:
         case 4:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
             const encounterOutcome = await handleEncounter();
-            encounterDiv.innerHTML = "Incontrate: " + incontriText;
-            moodDiv.innerHTML = encounterOutcome;
-
+            encounterContent = "Incontrate: " + incontriText + "<br><br>" + encounterOutcome;
             const visibilityRoll = Math.random() < 0.5;
-            visibilityDiv.innerHTML = visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro.";
+            let visibilityOutcome = visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro.";
+            encounterContent += "<br><br>" + visibilityOutcome; // Aggiungi la visibilità al contenuto
             break;
         case 5:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
-            encounterDiv.innerHTML = "Notate delle tracce che conducono ad " + incontriText;
+            encounterContent = "Notate delle tracce che conducono ad " + incontriText;
             break;
         case 6:
-            encounterDiv.innerHTML = "Non succede nulla";
+            encounterContent = "Non succede nulla";
             break;
     }
 
-    // Aggiungi i div al DOM
-    let outcomeContainer = document.getElementById('outcome');
-    outcomeContainer.appendChild(encounterDiv);
-    if (roll === 2 || roll === 3 || roll === 4) {
-        outcomeContainer.appendChild(moodDiv);
-        outcomeContainer.appendChild(visibilityDiv);
-    }
-    outcomeContainer.style.display = 'block';
+    document.getElementById('outcome').innerHTML = encounterContent; // Assegna il contenuto aggiornato
+    document.getElementById('outcome').style.display = 'block'; // Assicurati che il div sia visibile
 }
+
 
 
 async function handleEncounter() {
