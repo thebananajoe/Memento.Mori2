@@ -65,6 +65,28 @@
 </div>
 
 <script>
+async function determineRoomContent() {
+    const roll = Math.ceil(Math.random() * 6);
+    let contentHTML = ""; // Inizializza la stringa che conterrà il contenuto HTML
+
+    if (roll <= 2) {
+        // Tesoro: seleziona una riga a caso dalla sheet 'Tesori'
+        const treasureText = await fetchFromSheet('Tesori!A1:A100');
+        contentHTML = `<strong>Tesoro:</strong> ${treasureText}<br><br>`;
+    } else {
+        // Incontro: ottiene una descrizione specifica di cosa viene incontrato dallo sheet "Incontri"
+        const encounterDescription = await fetchFromSheet('Incontri!A1:A100'); // Assumi che 'Incontri!A1:A100' sia il range
+        
+        // Determina il tipo di incontro (ostile, amichevole, etc.)
+        const encounterOutcome = await handleEncounter(); // Assume che questa funzione restituisca "Ostile", "Amichevole", etc.
+        
+        // Combina la descrizione dell'incontro con il tipo in un unico stringa HTML
+        contentHTML = `<strong>Incontro:</strong> ${encounterDescription}<br><br><strong>Tipo di incontro:</strong> ${encounterOutcome}`;
+    }
+
+    return contentHTML; // Ritorna il contenuto HTML da inserire nel box della stanza
+}
+
 async function generateDungeon() {
     const dungeonContainer = document.getElementById('dungeon-container');
     dungeonContainer.innerHTML = ''; // Pulisci il contenitore precedente
@@ -72,42 +94,22 @@ async function generateDungeon() {
     const roomCount = Math.floor(Math.random() * 4) + 2; // Genera un numero casuale di stanze da 2 a 5
 
     for (let i = 0; i < roomCount; i++) {
-        const roomDescription = await fetchFromSheet(`Dungeon!A${Math.floor(Math.random() * 99) + 2}`);
         const roomTitle = i === 0 ? "Ingresso" : i === roomCount - 1 ? "Stanza boss" : `Stanza ${i + 1}`;
+        const roomDescription = await fetchFromSheet(`Dungeon!A${Math.floor(Math.random() * 99) + 2}`);
 
         // Crea un div per la stanza e aggiungi la descrizione
         const roomDiv = document.createElement('div');
         roomDiv.classList.add('box');
+
+        // Ottiene il contenuto della stanza (tesoro o incontro)
+        const roomContent = await determineRoomContent();
+
+        // Aggiunge la descrizione della stanza e il suo contenuto nello stesso div
+        roomDiv.innerHTML = `${roomTitle}: ${roomDescription}<br><br>${roomContent}`;
         
-        // Determina il contenuto della stanza (tesoro o incontro)
-        const contentOutcome = await determineRoomContent(); // Ottiene la descrizione del contenuto
-
-        // Aggiungi sia la descrizione della stanza che il contenuto nello stesso div
-        roomDiv.innerHTML = `${roomTitle}: ${roomDescription}<br><br><strong>${contentOutcome}</strong>`;
-
         dungeonContainer.appendChild(roomDiv);
     }
 }
-
-async function determineRoomContent() {
-    const roll = Math.ceil(Math.random() * 6);
-    if (roll <= 2) {
-        // Tesoro: seleziona una riga a caso dalla sheet 'Tesori'
-        const treasureText = await fetchFromSheet('Tesori!A1:A100');
-        return `<strong>Tesoro:</strong> ${treasureText}`;
-    } else {
-        // Incontro: prima determina il tipo di incontro
-        const encounterOutcome = await handleEncounter(); // Assume che questa funzione restituisca "Ostile", "Amichevole", etc.
-        
-        // Poi ottiene una descrizione specifica di cosa viene incontrato dallo sheet "Incontri"
-        const encounterDescription = await fetchFromSheet('Incontri!A1:A100'); // Modifica il range come necessario
-        
-        // Combina il tipo di incontro con la descrizione specifica dello stesso
-        return `<strong>Incontro:</strong> ${encounterOutcome} - ${encounterDescription}`;
-    }
-}
-
-
 
 async function fetchFromSheet(range) {
     const sheetId = '1BxbPEDPJcalOtcWTEYLenB9xCYMqm61xyL8OTQrs2rY';
