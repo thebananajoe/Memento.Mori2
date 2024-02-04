@@ -238,12 +238,12 @@ async function getMoodDetail(mood) {
 async function setEnvironment(choice) {
     // Nasconde i box non correlati o li resetta
     document.getElementById('outcome').style.display = 'none';
-    document.getElementById('encounter-nature').style.display = 'none';
-    document.getElementById('dungeon-container').innerHTML = ''; // Resetta il contenuto di dungeon
+    document.getElementById('dungeon-container').innerHTML = ''; // Assicurati che il contenuto di dungeon sia resettato
+    document.getElementById('encounter-nature').style.display = 'none'; // Nasconde il box natura dell'incontro
 
     if (choice === 'Urban') {
-        const urbanText = await fetchFromSheet('Urban!B1:B271');
-        document.getElementById('outcome').textContent = urbanText;
+       const prefixedText = "Appena entrate nel centro abitato notate " + urbanText;
+        document.getElementById('outcome').textContent = prefixedText;
         document.getElementById('outcome').style.display = 'block';
     } else if (choice === 'Wilderness') {
         await rollForWilderness(); // Assicurati che questa funzione gestisca anche la visualizzazione
