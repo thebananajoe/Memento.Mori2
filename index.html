@@ -97,7 +97,7 @@ async function determineRoomContent() {
         contentHTML += encounterOutcome;
     } else if (d6Roll === 6) {
         // Tesoro
-        const treasureText = await fetchFromSheet('Dungeon!Tesori!A1:A100');
+        const treasureText = await fetchFromSheet('Dungeon!E1:E7');
         contentHTML += `La stanza contiene un Tesoro: ${treasureText}`;
     }
 
@@ -115,7 +115,7 @@ async function generateDungeon() {
 
     for (let i = 0; i < roomCount; i++) {
         const roomTitle = i === 0 ? "Ingresso" : i === roomCount - 1 ? "Stanza boss" : `Stanza ${i + 1}`;
-        const roomDescription = await fetchFromSheet(`Dungeon!A${Math.floor(Math.random() * 99) + 2}`);
+        const roomDescription = await fetchFromSheet('Dungeon!F2:F7');
 
         // Crea un div per la stanza e aggiungi la descrizione
         const roomDiv = document.createElement('div');
