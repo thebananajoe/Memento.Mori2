@@ -3,134 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mia Pagina con Dati Google Sheets, Mood e Lancio Dado</title>
+    <title>Scelta dell'Ambiente</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body, html {
+            height: 100%;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             background-color: #f5f5f5;
-            transition: background-color 0.5s ease;
+            font-family: Arial, sans-serif;
         }
         .container {
             text-align: center;
-            width: 90%;
-            max-width: 600px;
-        }
-        .box {
-            font-size: 20px;
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            box-sizing: border-box;
         }
-        button {
-            font-size: 20px;
-            padding: 10px 20px;
+        .box, .button {
+            font-size: 16px;
+            padding: 15px 20px;
+            margin: 10px 0;
             border: none;
             border-radius: 5px;
             background-color: #007bff;
             color: white;
             cursor: pointer;
+            display: inline-block;
+            width: auto;
         }
-        button:hover {
+        .box {
+            background-color: #ffffff;
+            color: #000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .button:hover {
             background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            .button, .box {
+                font-size: 14px;
+                padding: 12px 18px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="dice-result" class="box">Tira il dado...</div>
-    <div id="random-cell" class="box" style="display: none;">Caricamento...</div>
-    <div id="mood" class="box" style="display: none;">Mood...</div>
-    <div id="first-sight" class="box" style="display: none;">Primo incontro...</div>
-    <button onclick="rollDice()">Tira il Dado</button>
+    <div class="button" onclick="setEnvironment('Urban')">Urban</div>
+    <div class="button" onclick="setEnvironment('Wilderness')">Wilderness</div>
+    <div class="button" onclick="generateDungeon()">Dungeon</div> <!-- Aggiunto il pulsante "Dungeon" -->
+    <div id="outcome" class="box" style="display: none;">Esito...</div>
+    <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
+    <div id="dungeon-room" class="box" style="display: none;"></div> <!-- Div per mostrare la stanza di dungeon -->
 </div>
 
 <script>
-async function fetchRandomCell() {
+
+async function generateDungeon() {
+    document.getElementById('outcome').style.display = 'none';
+    document.getElementById('encounter-nature').style.display = 'none';
+    document.getElementById('dungeon-room').style.display = 'none'; // Nascondi il div della stanza di dungeon
+
+    // Richiesta all'API di GPT per generare la stanza di dungeon
+const response = await fetch('https://dungeon-generator-api-gpt.glitch.me/generate-dungeon', { method: 'POST' });
+    const data = await response.json();
+
+    // Mostra la stanza di dungeon generata
+    if (data && data.room) {
+        document.getElementById('dungeon-room').textContent = data.room;
+        document.getElementById('dungeon-room').style.display = 'block'; // Visualizza il div della stanza di dungeon
+    } else {
+        document.getElementById('dungeon-room').textContent = 'Errore nella generazione della stanza.';
+    }
+}
+
+async function fetchFromSheet(range) {
     const sheetId = '1BxbPEDPJcalOtcWTEYLenB9xCYMqm61xyL8OTQrs2rY';
     const apiKey = 'AIzaSyDw8x-foQghu9M_dwREfKMfmc1XsVMlbF0';
-    const range = 'Incontri!A1:A271';
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
         if (data.values && data.values.length > 0) {
-            const rows = data.values;
-            const randomRow = Math.floor(Math.random() * rows.length);
-            document.getElementById('random-cell').textContent = rows[randomRow];
-            document.getElementById('random-cell').style.display = 'block';
+            const randomIndex = Math.floor(Math.random() * data.values.length);
+            return data.values[randomIndex][0];
         } else {
-            document.getElementById('random-cell').textContent = 'Nessun dato trovato.';
-            document.getElementById('random-cell').style.display = 'none';
+            return 'Nessun dato trovato nella colonna specificata.';
         }
     } catch(error) {
         console.error('Errore:', error);
-        document.getElementById('random-cell').style.display = 'none';
+        return 'Errore nel caricamento dei dati.';
     }
 }
 
-function rollDice() {
+async function rollForWilderness() {
     const roll = Math.ceil(Math.random() * 6);
-    let mood, backgroundColor, moodDetail;
-    document.getElementById('mood').style.display = 'none';
-    document.getElementById('random-cell').style.display = 'none';
-    document.getElementById('first-sight').style.display = 'none';
+    let incontriText = ""; // Inizializza come stringa vuota
 
-    if (roll === 1) {
-        mood = "Attacca immediatamente.";
-        backgroundColor = "red";
-        moodDetail = "";
-    } else if (roll === 2 || roll === 3) {
-        const hostileOptions = [
-            "Le creature sono aggressive, insultano chiunque incroci il loro cammino e attaccano se si sentono in vantaggio.",
-            "Richiedono cibo o soldi come tributo. Se si sentono in vantaggio, passano all'attacco.",
-            "Si mostrano violenti, e ricattano i PC per lasciarli in pace. Attaccheranno se credono di poter vincere.",
-            "Sono provocatori ed aggressivi, cercando il confronto diretto, minacciando ed insultando i PC."
-        ];
-        mood = "Ostili:";
-        moodDetail = hostileOptions[Math.floor(Math.random() * hostileOptions.length)];
-        backgroundColor = "orange";
-    } else if (roll === 4 || roll === 5) {
-        const neutralOptions = [
-            "Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.",
-            "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.",
-            "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."
-        ];
-        mood = "Neutrali:";
-        moodDetail = neutralOptions[Math.floor(Math.random() * neutralOptions.length)];
-        backgroundColor = "yellow";
-    } else {
-        const friendlyOptions = [
-            "Sono disposti a condividere informazioni e assistenza.",
-            "Sono disposti a fornire ai PC cibo, acqua o cure.",
-            "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.",
-            "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."
-        ];
-        mood = "Amichevoli:";
-        moodDetail = friendlyOptions[Math.floor(Math.random() * friendlyOptions.length)];
-        backgroundColor = "green";
+    switch (roll) {
+        case 1:
+            document.getElementById('outcome').textContent = "I PG si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
+            break;
+        case 2:
+        case 3:
+        case 4:
+            incontriText = await fetchFromSheet('Incontri!A1:A271');
+            const encounterOutcome = await handleEncounter();
+            document.getElementById('outcome').textContent = "Incontrate: " + incontriText;
+            document.getElementById('encounter-nature').textContent = encounterOutcome;
+            document.getElementById('encounter-nature').style.display = 'block';
+            break;
+        case 5:
+            incontriText = await fetchFromSheet('Incontri!A1:A271');
+            document.getElementById('outcome').textContent = "Notate delle tracce che conducono ad " + incontriText;
+            break;
+        case 6:
+            document.getElementById('outcome').textContent = "Non succede nulla";
+            break;
     }
 
-    document.getElementById('dice-result').textContent = mood;
-    document.getElementById('mood').textContent = moodDetail;
-    document.getElementById('mood').style.display = 'block';
-    document.body.style.backgroundColor = backgroundColor;
-
-    if (roll === 2 || roll === 3 || roll === 4 || roll === 5 || roll === 6) {
-        fetchRandomCell();
-    }
+    document.getElementById('outcome').style.display = 'block';
 }
 
-window.onload = rollDice;
+async function handleEncounter() {
+    const roll = Math.ceil(Math.random() * 6);
+    let mood = "";
+    let detail = "";
+
+    switch (roll) {
+        case 1:
+            mood = "Attacca immediatamente.";
+            break;
+        case 2:
+        case 3:
+            mood = "Ostile";
+            detail = await getMoodDetail(mood); // Ottieni il dettaglio specifico per "Ostile"
+            break;
+        case 4:
+        case 5:
+            mood = "Si può negoziare";
+            detail = await getMoodDetail(mood); // Ottieni il dettaglio specifico per "Si può negoziare"
+            break;
+        case 6:
+            mood = "Amichevole";
+            detail = await getMoodDetail(mood); // Ottieni il dettaglio specifico per "Amichevole"
+            break;
+    }
+
+    return mood + (detail ? ": " + detail : ""); // Concatena il mood con il suo dettaglio
+}
+
+// Funzione per ottenere il dettaglio specifico basato sul mood
+async function getMoodDetail(mood) {
+    const roll = Math.ceil(Math.random() * 3); // Tiro di dado d3 per la sotto-opzione
+    const details = {
+        "Ostile": ["Le creature sono aggressive, Insultano chiunque incroci il loro cammino e attaccando se si sentono in vantaggio", "Richiedendo cibo o soldi come tributo. Se si sentono in vantaggio, passano all'attacco.", "Si mostrano violenti, e ricattano i PC per lasciarli in pace. Attaccheranno se credono di poter vincere.", "ono provocatori ed aggressivi, cercando il confronto diretto, minacciando ed insultando i PC."],
+        "Neutrale": ["Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.", "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.", "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."],
+        "Amichevole": ["Sono disposti a condividere informazioni e assistenza.", "ASono disposti a fornire ai PC cibo, acqua o cure.", "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.", "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."]
+    };
+
+    return details[mood][roll - 1]; // Seleziona una sotto-opzione basata sul tiro di dado
+}
+
+
+async function setEnvironment(choice) {
+    document.getElementById('outcome').style.display = 'none';
+    document.getElementById('encounter-nature').style.display = 'none';
+    
+    if (choice === 'Urban') {
+        const urbanText = await fetchFromSheet('Urban!B1:B271');
+        document.getElementById('outcome').textContent = urbanText;
+    } else if (choice === 'Wilderness') {
+        await rollForWilderness();
+    }
+
+    document.getElementById('outcome').style.display = 'block';
+}
 </script>
 
 </body>
