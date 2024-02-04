@@ -92,15 +92,21 @@ async function generateDungeon() {
 async function determineRoomContent() {
     const roll = Math.ceil(Math.random() * 6);
     if (roll <= 2) {
-        // Tesoro
+        // Tesoro: seleziona una riga a caso dalla sheet 'Tesori'
         const treasureText = await fetchFromSheet('Tesori!A1:A100');
-        return `Tesoro: ${treasureText}`;
+        return `<strong>Tesoro:</strong> ${treasureText}`;
     } else {
-        // Incontro
-        const encounterOutcome = await handleEncounter(); // Assume che questa funzione restituisca una descrizione dell'incontro
-        return `Incontro: ${encounterOutcome}`;
+        // Incontro: prima determina il tipo di incontro
+        const encounterOutcome = await handleEncounter(); // Assume che questa funzione restituisca "Ostile", "Amichevole", etc.
+        
+        // Poi ottiene una descrizione specifica di cosa viene incontrato dallo sheet "Incontri"
+        const encounterDescription = await fetchFromSheet('Incontri!A1:A100'); // Modifica il range come necessario
+        
+        // Combina il tipo di incontro con la descrizione specifica dello stesso
+        return `<strong>Incontro:</strong> ${encounterOutcome} - ${encounterDescription}`;
     }
 }
+
 
 
 async function fetchFromSheet(range) {
