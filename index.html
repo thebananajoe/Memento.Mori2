@@ -163,13 +163,13 @@ async function fetchFromSheet(range) {
 }
 
 async function rollForWilderness() {
-    document.getElementById('dungeon-container').innerHTML = ''; // Resetta il contenuto di dungeon
+    // Resettare o nascondere eventuali box aperti
+    document.getElementById('dungeon-container').innerHTML = '';
     document.getElementById('outcome').style.display = 'none';
     document.getElementById('encounter-nature').style.display = 'none';
 
     const roll = Math.ceil(Math.random() * 6);
     let incontriText = "";
-    let visibilityOutcome = ""; // Nuova variabile per il risultato della visibilità
 
     switch (roll) {
         case 1:
@@ -180,19 +180,17 @@ async function rollForWilderness() {
         case 4:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
             const encounterOutcome = await handleEncounter();
-            const visibilityRoll = Math.random() < 0.5; // 50-50 chance
-            visibilityOutcome = visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro.";
+            // Aggiornamento dei box con testo dell'incontro e mood
+            let encounterContent = "Incontrate: " + incontriText + "<br>" + encounterOutcome;
 
-            // Aggiorna i box con il testo dell'incontro e il mood
-            document.getElementById('outcome').textContent = "Incontrate: " + incontriText;
-            document.getElementById('encounter-nature').textContent = encounterOutcome;
-            document.getElementById('encounter-nature').style.display = 'block';
+            // Determina la visibilità
+            const visibilityRoll = Math.random() < 0.5;
+            let visibilityOutcome = visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro.";
+            encounterContent += "<br>" + visibilityOutcome; // Aggiungi al contenuto esistente
 
-            // Crea un nuovo div per il risultato della visibilità
-            const visibilityDiv = document.createElement('div');
-            visibilityDiv.classList.add('box');
-            visibilityDiv.textContent = visibilityOutcome;
-            document.body.appendChild(visibilityDiv); // Aggiungi il div al body o a un contenitore specifico
+            // Assegna il contenuto aggiornato
+            document.getElementById('outcome').innerHTML = encounterContent;
+            document.getElementById('outcome').style.display = 'block';
             break;
         case 5:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
