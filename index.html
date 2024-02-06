@@ -58,45 +58,13 @@
 <div class="container">
     <div class="button" onclick="setEnvironment('Urban')">Urban</div>
     <div class="button" onclick="setEnvironment('Wilderness')">Wilderness</div>
-    <div class="button" id="travel-button">Travel</div>
     <div id="outcome" class="box" style="display: none;">Esito...</div>
     <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
     <div class="button" onclick="generateDungeon()">Dungeon</div>
     <div id="dungeon-container" class="container"></div>
-    <div id="travel-biomes-container" style="display: none;">
 </div>
 
 <script>
-const travelButton = document.createElement('button');
-travelButton.textContent = 'Travel';
-travelButton.addEventListener('click', () => {
-    // Mostra i pulsanti per i biomi
-    const biomeButtons = ['Pianura', 'Foresta', 'Steppa', 'Deserto', 'Montagna', 'Palude', 'Acquatico', 'Giungla'].map(biome => {
-        const biomeButton = document.createElement('button');
-        biomeButton.textContent = biome;
-        biomeButton.addEventListener('click', async () => {
-            // Ottiene la descrizione del bioma e il risultato del wilderness encounter
-            const biomeDescription = await fetchFromSheet(`Biomi!A${Math.floor(Math.random() * 8) + 1}:A${Math.floor(Math.random() * 8) + 1}`);
-            const wildernessResult = await rollWildernessEncounter();
-
-            // Mostra i risultati
-            document.getElementById('travel-outcome').textContent = `Bioma: ${biomeDescription}`;
-            document.getElementById('travel-encounter-nature').textContent = `Risultato: ${wildernessResult}`;
-            document.getElementById('travel-outcome').style.display = 'block';
-            document.getElementById('travel-encounter-nature').style.display = 'block';
-        });
-        return biomeButton;
-    });
-
-    // Mostra i pulsanti per i biomi
-    biomeButtons.forEach(biomeButton => {
-        document.getElementById('travel-biomes-container').appendChild(biomeButton);
-    });
-    document.getElementById('travel-biomes-container').style.display = 'block';
-});
-
-document.getElementById('dungeon-container').appendChild(travelButton);
-
 async function determineRoomContent() {
     const d4Roll = Math.ceil(Math.random() * 4); // Determina il contenuto principale della stanza
     const d6Roll = Math.ceil(Math.random() * 6); // Decide se c'è un Incontro, niente, o un Tesoro
