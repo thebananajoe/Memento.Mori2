@@ -83,11 +83,11 @@ async function determineRoomContent() {
             break;
         case 3:
             const obstacleText = await fetchFromSheet('Dungeon!C2:C7');
-            contentHTML += `La stanza è ${obstacleText}<br><br>`;
+            contentHTML += `${obstacleText}<br><br>`;
             break;
         case 4:
             const anomalyText = await fetchFromSheet('Dungeon!D2:D7');
-            contentHTML += `La stanza è ${anomalyText}<br><br>`;
+            contentHTML += `${anomalyText}<br><br>`;
             break;
     }
 
@@ -98,7 +98,7 @@ async function determineRoomContent() {
         contentHTML += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
     } else if (d6Roll === 6) {
         // Tesoro
-        const treasureText = await fetchFromSheet('Dungeon!E1:E7');
+        const treasureText = await fetchFromSheet('Dungeon!E2:E7');
         contentHTML += `Nella stanza c'è ${treasureText}`;
     }
 
@@ -126,7 +126,9 @@ async function generateDungeon() {
         } else {
             roomTitle = `Stanza ${i}`;
         }
-        const roomDescription = await fetchFromSheet('Dungeon!F2:F7');
+       // Determina la colonna da cui prendere la descrizione
+        const column = Math.random() < 0.7 ? 'G' : 'F';
+        const roomDescription = await fetchFromSheet(`Dungeon!${column}2:${column}30`);
 
         // Crea un div per la stanza e aggiungi la descrizione
         const roomDiv = document.createElement('div');
