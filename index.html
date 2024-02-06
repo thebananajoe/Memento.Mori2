@@ -261,6 +261,47 @@ async function setEnvironment(choice) {
     }
     // La generazione di Dungeon ha il suo pulsante e viene gestita separatamente
 }
+
+// Crea il pulsante per viaggiare
+const travelButton = document.createElement('button');
+travelButton.textContent = 'Travel';
+travelButton.addEventListener('click', async () => {
+    // Crea gli 8 pulsanti per i biomi
+    const biomeButtons = ['Pianura', 'Foresta', 'Steppa', 'Deserto', 'Montagna', 'Palude', 'Acquatico', 'Giungla'].map(biome => {
+        const biomeButton = document.createElement('button');
+        biomeButton.textContent = biome;
+        biomeButton.addEventListener('click', async () => {
+            // Ottiene la descrizione del bioma e il risultato del wilderness encounter
+            const biomeDescription = await fetchFromSheet(`Biomi!A${Math.floor(Math.random() * 8) + 1}:A${Math.floor(Math.random() * 8) + 1}`);
+            const wildernessResult = await rollWildernessEncounter();
+
+            // Crea i due div per la descrizione del bioma e il risultato del wilderness encounter
+            const biomeDiv = document.createElement('div');
+            biomeDiv.innerHTML = `${biome}: ${biomeDescription}`;
+
+            const encounterDiv = document.createElement('div');
+            encounterDiv.innerHTML = `Wilderness Encounter: ${wildernessResult}`;
+
+            // Aggiunge i due div allo stesso div
+            const resultDiv = document.createElement('div');
+            resultDiv.appendChild(biomeDiv);
+            resultDiv.appendChild(encounterDiv);
+
+            // Aggiunge il div con il risultato al contenitore
+            document.getElementById('dungeon-container').appendChild(resultDiv);
+        });
+
+        return biomeButton;
+    });
+
+    // Aggiunge i pulsanti per i biomi al contenitore
+    const biomeContainer = document.createElement('div');
+    biomeButtons.forEach(biomeButton => biomeContainer.appendChild(biomeButton));
+    document.getElementById('dungeon-container').appendChild(biomeContainer);
+});
+
+// Aggiunge il pulsante per viaggiare al contenitore
+document.getElementById('dungeon-container').appendChild(travelButton);
 </script>
 
 </body>
