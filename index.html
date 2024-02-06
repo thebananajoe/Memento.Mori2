@@ -58,7 +58,7 @@
 <div class="container">
     <div class="button" onclick="setEnvironment('Urban')">Urban</div>
     <div class="button" onclick="setEnvironment('Wilderness')">Wilderness</div>
-    <div class="button" id="travel-button" style="display: none;">Travel</div>
+    <div class="button" id="travel-button">Travel</div>
     <div id="outcome" class="box" style="display: none;">Esito...</div>
     <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
     <div class="button" onclick="generateDungeon()">Dungeon</div>
@@ -68,6 +68,9 @@
 <script>
 const travelButton = document.getElementById('travel-button');
 travelButton.addEventListener('click', async () => {
+    // Nascondi il pulsante "Travel"
+    travelButton.style.display = 'none';
+
     // Crea gli 8 pulsanti per i biomi
     const biomeButtons = ['Pianura', 'Foresta', 'Steppa', 'Deserto', 'Montagna', 'Palude', 'Acquatico', 'Giungla'].map(biome => {
         const biomeButton = document.createElement('button');
@@ -90,7 +93,6 @@ travelButton.addEventListener('click', async () => {
     biomeButtons.forEach(biomeButton => {
         document.getElementById('dungeon-container').appendChild(biomeButton);
     });
-    travelButton.style.display = 'none';
 });
 
 async function determineRoomContent() {
