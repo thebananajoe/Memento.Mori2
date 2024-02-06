@@ -127,7 +127,7 @@ async function generateDungeon() {
             roomTitle = `Stanza ${i}`;
         }
        // Determina la colonna da cui prendere la descrizione
-        const column = Math.random() < 0.7 ? 'G' : 'F';
+        const column = Math.random() < 0.6 ? 'G' : 'F';
         const roomDescription = await fetchFromSheet(`Dungeon!${column}2:${column}30`);
 
         // Crea un div per la stanza e aggiungi la descrizione
