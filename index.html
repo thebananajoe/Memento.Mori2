@@ -87,13 +87,16 @@
 
     /* Stili per i pulsanti principali sulla parte inferiore della pagina */
     #button-container {
+        position: fixed;
+        bottom: 20px; /* Distanza dal basso */
+        left: 50%; /* Posiziona al centro */
+        transform: translateX(-50%); /* Regola per centrare */
+        background-color: #fff; /* Sfondo bianco per il contenitore dei pulsanti */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Ombra sopra il contenitore dei pulsanti */
+        padding: 20px;
         display: flex;
         justify-content: center;
-        align-items: flex-end;
-        margin-top: auto; /* Sposta il contenitore dei pulsanti in basso */
-        padding: 20px;
-        background-color: #fff; /* Sfondo bianco per il contenitore dei pulsanti */
-        box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Ombra sotto il contenitore dei pulsanti */
+        align-items: center;
     }
 
     @media (max-width: 600px) {
