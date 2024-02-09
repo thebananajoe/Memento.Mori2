@@ -241,55 +241,49 @@ async function getMoodDetail(mood) {
 
 async function rollForBiome(biome) {
     document.getElementById('dungeon-container').innerHTML = '';
-    document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
     document.getElementById('encounter-nature').style.display = 'none';
+    document.getElementById('outcome').style.display = 'none';
+    document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
 
-    const roll = Math.ceil(Math.random() * 6);
-    let incontriText = "";
-    let encounterContent = ""; // Utilizza questa variabile per accumulare il contenuto
+    // Questa variabile `encounterContent` verrà usata per accumulare il contenuto dell'incontro
+    let encounterContent = "";
 
-    // Aggiungi qui il codice per pescare una casella a caso dallo sheet "Biome" se il bioma non è "Wilderness"
+    // Se il bioma non è "Wilderness", pesca una casella a caso dal foglio "Biome"
     if (biome !== 'Wilderness') {
         const biomeText = await fetchFromSheet('Biome!A1:A12');
         encounterContent += `Biome specifico: ${biomeText}<br><br>`;
     }
 
-
-    document.getElementById('dungeon-container').innerHTML = '';
-    document.getElementById('encounter-nature').style.display = 'none';
-    document.getElementById('outcome').style.display = 'none';
-    document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
-
     const roll = Math.ceil(Math.random() * 6);
     let incontriText = "";
-    let encounterContent = ""; // Utilizza questa variabile per accumulare il contenuto
 
+    // Usa lo switch per determinare il contenuto dell'incontro basato sul roll
     switch (roll) {
         case 1:
-            encounterContent = "I PG si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
+            encounterContent += "I PG si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
             break;
         case 2:
         case 3:
         case 4:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
             const encounterOutcome = await handleEncounter();
-            encounterContent = "Incontrate: " + incontriText + "<br><br>" + encounterOutcome;
+            encounterContent += `Incontrate: ${incontriText}<br><br>Tipo di incontro: ${encounterOutcome}`;
             const visibilityRoll = Math.random() < 0.5;
-            let visibilityOutcome = visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro.";
-            encounterContent += "<br><br>" + visibilityOutcome; // Aggiungi la visibilità al contenuto
+            encounterContent += `<br><br>${visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro."}`;
             break;
         case 5:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
-            encounterContent = "Notate delle tracce che conducono ad " + incontriText;
+            encounterContent += `Notate delle tracce che conducono ad ${incontriText}`;
             break;
         case 6:
-            encounterContent = "Non succede nulla";
+            encounterContent += "Non succede nulla";
             break;
     }
 
-    document.getElementById('outcome').innerHTML = encounterContent; // Assegna il contenuto aggiornato
-    document.getElementById('outcome').style.display = 'block'; // Assicurati che il div sia visibile
+    document.getElementById('outcome').innerHTML = encounterContent;
+    document.getElementById('outcome').style.display = 'block';
 }
+
 
 
 async function setEnvironment(choice) {
