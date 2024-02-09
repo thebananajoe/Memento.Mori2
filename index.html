@@ -278,22 +278,40 @@ async function getMoodDetail(mood) {
     return details[mood][roll - 1]; // Seleziona una sotto-opzione basata sul tiro di dado
 }
 
+async function rollForBiome(biome) {
+    document.getElementById('dungeon-container').innerHTML = '';
+    document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
+    document.getElementById('encounter-nature').style.display = 'none';
+
+    const roll = Math.ceil(Math.random() * 6);
+    let incontriText = "";
+    let encounterContent = ""; // Utilizza questa variabile per accumulare il contenuto
+
+    // Aggiungi qui il codice per pescare una casella a caso dallo sheet "Biome" se il bioma non è "Wilderness"
+    if (biome !== 'Wilderness') {
+        const biomeText = await fetchFromSheet('Biome!A1:A12');
+        encounterContent += `Biome specifico: ${biomeText}<br><br>`;
+    }
+
+    // Il resto del codice rimane simile a rollForWilderness con l'aggiunta di biomeText se necessario
+    // ...
+}
 
 async function setEnvironment(choice) {
     // Resetta i box per le altre scelte
-    document.getElementById('dungeon-container').innerHTML = ''; // Resetta il contenuto di dungeon
-    document.getElementById('encounter-nature').style.display = 'none'; // Nasconde il box natura dell'incontro
-    document.getElementById('outcome').style.display = 'none'; // Nasconde il box di esito prima di impostare nuovo contenuto
+    document.getElementById('dungeon-container').innerHTML = '';
+    document.getElementById('encounter-nature').style.display = 'none';
+    document.getElementById('outcome').style.display = 'none';
+    document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
 
     if (choice === 'Urban') {
-        const urbanText = await fetchFromSheet('Urban!B1:B271'); // Assicurati che questo range sia corretto
+        const urbanText = await fetchFromSheet('Urban!B1:B271');
         const prefixedText = "Appena entrate nel centro abitato notate: " + urbanText;
         document.getElementById('outcome').textContent = prefixedText;
-        document.getElementById('outcome').style.display = 'block';
-    } else if (choice === 'Wilderness') {
-        await rollForWilderness(); // Continua a gestire wilderness come prima
+    } else if (choice === 'Wilderness' || choice === 'Foresta' || choice === 'Pianura' || choice === 'Steppa' || choice === 'Deserto' || choice === 'Montagna' || choice === 'Palude' || choice === 'Acquatico' || choice === 'Giungla') {
+        await rollForBiome(choice); // Gestisce sia wilderness che altri biomi
     }
-    // La generazione di Dungeon ha il suo pulsante e viene gestita separatamente
+    document.getElementById('outcome').style.display = 'block';
 }
 </script>
 
