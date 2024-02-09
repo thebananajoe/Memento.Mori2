@@ -61,10 +61,33 @@
     <div id="outcome" class="box" style="display: none;">Esito...</div>
     <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
     <div class="button" onclick="generateDungeon()">Dungeon</div>
+    <div class="button" onclick="toggleTravelOptions()">Travel</div>
     <div id="dungeon-container" class="container"></div>
 </div>
 
+  <div id="travel-options" class="container" style="display: none;">
+    <div class="button">Foresta</div>
+    <div class="button">Pianura</div>
+    <div class="button">Steppa</div>
+    <div class="button">Deserto</div>
+    <div class="button">Montagna</div>
+    <div class="button">Palude</div>
+    <div class="button">Mare</div>
+    <div class="button">Giungla</div>
+  </div>
+
 <script>
+
+function toggleTravelOptions() {
+      var travelOptions = document.getElementById("travel-options");
+      if (travelOptions.style.display === "none") {
+        travelOptions.style.display = "flex"; // Usa flex se vuoi che i pulsanti siano in linea
+      } else {
+        travelOptions.style.display = "none";
+      }
+    }
+
+    
 async function determineRoomContent() {
     const d4Roll = Math.ceil(Math.random() * 4); // Determina il contenuto principale della stanza
     const d6Roll = Math.ceil(Math.random() * 6); // Decide se c'è un Incontro, niente, o un Tesoro
