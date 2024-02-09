@@ -142,46 +142,47 @@ async function determineRoomContent() {
 }
 
 
-async function generateDungeon() {
+aasync function generateDungeon() {
     document.getElementById('outcome').style.display = 'none'; // Nasconde il box di esito
     document.getElementById('encounter-nature').style.display = 'none'; // Nasconde il box natura dell'incontro
-    // Genera il dungeon come prima
     const dungeonContainer = document.getElementById('dungeon-container');
     dungeonContainer.innerHTML = ''; // Pulisci il contenitore precedente
 
-    const roomCount = Math.floor(Math.random() * 4) + 2; // Genera un numero casuale di stanze da 2 a 5
+    // Genera sempre un ingresso, stanze intermedie e un'uscita
+    let roomCount = Math.floor(Math.random() * 4) + 2; // Numero casuale di stanze intermedie da 2 a 5
 
-     for (let i = 0; i < roomCount; i++) {
-        let roomTitle;
-        if (i === 0) {
-            roomTitle = "Ingresso";
-        } else if (i === roomCount - 1) {
-            roomTitle = "Uscita";
-        const roomDescription = await fetchFromSheet(`Dungeon!F2:F7`);
-    const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
-    const encounterOutcome = await handleEncounter();
-    const encounterContent = `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
-    roomDiv.innerHTML = `${roomTitle}: ${roomDescription}<br><br>${encounterContent}`;
-        } else {
-            roomTitle = `Stanza ${i}`;
-        }
-       // Determina la colonna da cui prendere la descrizione
-        const column = Math.random() < 0.6 ? 'G' : 'F';
-        const roomDescription = await fetchFromSheet(`Dungeon!${column}2:${column}30`);
+    // Creazione dell'ingresso
+    await createDungeonRoom(dungeonContainer, "Ingresso", 0, "F");
 
-        // Crea un div per la stanza e aggiungi la descrizione
-        const roomDiv = document.createElement('div');
-        roomDiv.classList.add('box');
-
-        // Ottiene il contenuto della stanza (tesoro o incontro)
-        const roomContent = await determineRoomContent();
-
-        // Aggiunge la descrizione della stanza e il suo contenuto nello stesso div
-        roomDiv.innerHTML = `${roomTitle}: ${roomDescription}<br><br>${roomContent}`;
-        
-        dungeonContainer.appendChild(roomDiv);
+    // Creazione delle stanze intermedie
+    for (let i = 1; i < roomCount - 1; i++) {
+        await createDungeonRoom(dungeonContainer, `Stanza ${i}`, i, "F");
     }
+
+    // Creazione dell'uscita con incontro garantito
+    await createDungeonRoom(dungeonContainer, "Uscita", roomCount - 1, "F", true);
 }
+
+async function createDungeonRoom(container, title, index, column, isExit = false) {
+    const roomDiv = document.createElement('div');
+    roomDiv.classList.add('box');
+    const roomDescription = await fetchFromSheet(`Dungeon!${column}2:${column}30`);
+    let roomContent;
+
+    if (isExit) {
+        // Forza un incontro all'uscita
+        const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
+        const encounterOutcome = await handleEncounter();
+        roomContent = `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
+    } else {
+        // Contenuto casuale per le altre stanze
+        roomContent = await determineRoomContent();
+    }
+
+    roomDiv.innerHTML = `${title}: ${roomDescription}<br><br>${roomContent}`;
+    container.appendChild(roomDiv);
+}
+
 
 async function fetchFromSheet(range) {
     const sheetId = '1BxbPEDPJcalOtcWTEYLenB9xCYMqm61xyL8OTQrs2rY';
