@@ -308,10 +308,12 @@ async function setEnvironment(choice) {
         const urbanText = await fetchFromSheet('Urban!B1:B271');
         const prefixedText = "Appena entrate nel centro abitato notate: " + urbanText;
         document.getElementById('outcome').textContent = prefixedText;
-    } else if (choice === 'Wilderness' || choice === 'Foresta' || choice === 'Pianura' || choice === 'Steppa' || choice === 'Deserto' || choice === 'Montagna' || choice === 'Palude' || choice === 'Acquatico' || choice === 'Giungla') {
+        document.getElementById('outcome').style.display = 'block';
+    } else if (choice !== 'Dungeon') { // Rimuovi la chiamata a rollForWilderness qui
         await rollForBiome(choice); // Gestisce sia wilderness che altri biomi
+        // Non chiamare rollForWilderness qui
     }
-    document.getElementById('outcome').style.display = 'block';
+    // Non è necessario chiamare .style.display = 'block'; qui, lo farà rollForBiome
 }
 </script>
 
