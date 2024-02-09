@@ -20,6 +20,34 @@
     background-color: #4CAF50; /* Verde */
   }
 
+  /* Stile per l'intestazione di ciascuna stanza */
+.room-header {
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  background-color: #eee; /* Colore di sfondo per l'intestazione compressa */
+}
+
+/* Stile per l'intestazione della stanza quando è espansa */
+.active, .room-header:hover {
+  background-color: #ccc; /* Colore di sfondo per l'intestazione espansa */
+}
+
+/* Stile per il contenuto della stanza */
+.room-content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f9f9f9;
+}
+
+
+
    #travel-options {
     flex-direction: column; /* Imposta i figli in colonna */
     align-items: flex-start; /* Allinea i pulsanti a sinistra */
@@ -165,23 +193,41 @@ async function generateDungeon() {
 
 async function createDungeonRoom(container, title, index, column, isExit = false) {
     const roomDiv = document.createElement('div');
-    roomDiv.classList.add('box');
+    const header = document.createElement('button');
+    header.classList.add('room-header');
+    header.innerHTML = title;
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.classList.add('room-content');
+
     const roomDescription = await fetchFromSheet(`Dungeon!${column}2:${column}30`);
     let roomContent;
 
     if (isExit) {
-        // Forza un incontro all'uscita
         const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
         const encounterOutcome = await handleEncounter();
         roomContent = `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
     } else {
-        // Contenuto casuale per le altre stanze
         roomContent = await determineRoomContent();
     }
 
-    roomDiv.innerHTML = `${title}: ${roomDescription}<br><br>${roomContent}`;
+    contentDiv.innerHTML = `${roomDescription}<br><br>${roomContent}`;
+    roomDiv.appendChild(header);
+    roomDiv.appendChild(contentDiv);
+
     container.appendChild(roomDiv);
+
+    header.addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+    });
 }
+
 
 
 async function fetchFromSheet(range) {
