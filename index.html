@@ -4,114 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scelta dell'Ambiente</title>
-   <style>
-    body, html {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column; /* Imposta il layout in colonna per il corpo e l'html */
-        background-color: #f5f5f5;
-        font-family: Arial, sans-serif;
-    }
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
 
-    .button-green {
-        background-color: #4CAF50; /* Verde */
-    }
+          .button-green {
+    background-color: #4CAF50; /* Verde */
+  }
 
-    /* Stile per l'intestazione di ciascuna stanza */
-    .room-header {
-        cursor: pointer;
-        padding: 10px;
-        width: 100%;
-        text-align: left;
-        border: none;
-        outline: none;
-        transition: 0.4s;
-        background-color: #eee; /* Colore di sfondo per l'intestazione compressa */
-    }
-
-    /* Stile per l'intestazione della stanza quando è espansa */
-    .active, .room-header:hover {
-        background-color: #ccc; /* Colore di sfondo per l'intestazione espansa */
-    }
-
-    /* Stile per il contenuto della stanza */
-    .room-content {
-        padding: 0 18px;
-        display: none;
-        overflow: hidden;
-        transition: max-height 0.2s ease-out;
-        background-color: #f9f9f9;
-    }
-
-    #travel-options {
-        flex-direction: column; /* Imposta i figli in colonna */
-        align-items: flex-start; /* Allinea i pulsanti a sinistra */
-    }
-
-    .container {
-        text-align: center;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
-    .content-box {
-        background-color: #e0e0e0; /* Un grigio più chiaro per i contenuti */
-        margin-top: 5px;
-        padding: 10px;
-    }
-
-    .box, .button {
-        font-size: 16px;
-        padding: 15px 20px;
-        margin: 10px 0;
-        border: none;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: white;
-        cursor: pointer;
-        display: inline-block;
-        width: auto;
-    }
-
-    .box {
-        background-color: #ffffff;
-        color: #000;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .button:hover {
-        background-color: #0056b3;
-    }
-
-    /* Stili per i pulsanti principali sulla parte inferiore della pagina */
-  #button-container {
-    position: fixed !important;
-    bottom: 20px !important; /* Distanza dal basso */
-    left: 50% !important; /* Posiziona al centro */
-    transform: translateX(-50%) !important; /* Regola per centrare */
-    background-color: #fff !important; /* Sfondo bianco per il contenitore dei pulsanti */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important; /* Ombra sopra il contenitore dei pulsanti */
-    padding: 20px !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+  /* Stile per l'intestazione di ciascuna stanza */
+.room-header {
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  background-color: #eee; /* Colore di sfondo per l'intestazione compressa */
 }
 
-    @media (max-width: 600px) {
-        .button, .box {
-            font-size: 14px;
-            padding: 12px 18px;
-        }
+/* Stile per l'intestazione della stanza quando è espansa */
+.active, .room-header:hover {
+  background-color: #ccc; /* Colore di sfondo per l'intestazione espansa */
+}
 
-        /* Aggiungi stili per i pulsanti mobile */
+/* Stile per il contenuto della stanza */
+.room-content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f9f9f9;
+}
+
+
+
+   #travel-options {
+    flex-direction: column; /* Imposta i figli in colonna */
+    align-items: flex-start; /* Allinea i pulsanti a sinistra */
+  }
+
         .container {
-            margin-bottom: 50px; /* Aggiunge uno spazio vuoto alla fine per i pulsanti mobile */
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
-    }
-</style>
-
+      .content-box {
+          background-color: #e0e0e0; /* Un grigio più chiaro per i contenuti */
+          margin-top: 5px;
+          padding: 10px;
+      }
+        .box, .button {
+            font-size: 16px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            display: inline-block;
+            width: auto;
+        }
+        .box {
+            background-color: #ffffff;
+            color: #000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            .button, .box {
+                font-size: 14px;
+                padding: 12px 18px;
+            }
+        }
+        
+    </style>
 </head>
 <body>
 
