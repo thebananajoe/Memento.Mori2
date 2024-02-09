@@ -58,24 +58,13 @@
 <div class="container">
     <div class="button" onclick="setEnvironment('Urban')">Urban</div>
     <div class="button" onclick="setEnvironment('Wilderness')">Wilderness</div>
-    <div class="button" onclick="generateDungeon()">Dungeon</div>
-    <div class="button" onclick="setEnvironment('Travel')">Travel</div>
     <div id="outcome" class="box" style="display: none;">Esito...</div>
     <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
-    <div id="travel-box-ciao" class="box hidden">Ciao</div>
-    <div id="travel-box-bao" class="box hidden">Bao</div>
-    <div class="container"></div>
+    <div class="button" onclick="generateDungeon()">Dungeon</div>
+    <div id="dungeon-container" class="container"></div>
 </div>
 
 <script>
-
-function handleTravelClick() {
-    document.getElementById("travel-box-ciao").classList.remove("hidden");
-    document.getElementById("travel-box-bao").classList.remove("hidden");
-}
-
-document.getElementById("travel-btn").addEventListener("click", handleTravelClick);
-
 async function determineRoomContent() {
     const d4Roll = Math.ceil(Math.random() * 4); // Determina il contenuto principale della stanza
     const d6Roll = Math.ceil(Math.random() * 6); // Decide se c'è un Incontro, niente, o un Tesoro
