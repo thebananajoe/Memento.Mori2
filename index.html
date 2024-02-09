@@ -10,8 +10,7 @@
         margin: 0;
         padding: 0;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column; /* Imposta il layout in colonna per il corpo e l'html */
         background-color: #f5f5f5;
         font-family: Arial, sans-serif;
     }
@@ -86,6 +85,17 @@
         background-color: #0056b3;
     }
 
+    /* Stili per i pulsanti principali sulla parte inferiore della pagina */
+    #button-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        margin-top: auto; /* Sposta il contenitore dei pulsanti in basso */
+        padding: 20px;
+        background-color: #fff; /* Sfondo bianco per il contenitore dei pulsanti */
+        box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Ombra sotto il contenitore dei pulsanti */
+    }
+
     @media (max-width: 600px) {
         .button, .box {
             font-size: 14px;
@@ -93,21 +103,8 @@
         }
 
         /* Aggiungi stili per i pulsanti mobile */
-        body, html {
-            flex-direction: column;
-        }
-
         .container {
             margin-bottom: 50px; /* Aggiunge uno spazio vuoto alla fine per i pulsanti mobile */
-        }
-
-        #button-container {
-            position: fixed; /* Rende il contenitore dei pulsanti fisso nella parte inferiore dello schermo */
-            bottom: 0; /* Fissa il contenitore dei pulsanti al fondo dello schermo */
-            width: 100%; /* Assicura che il contenitore dei pulsanti occupi l'intera larghezza dello schermo */
-            background-color: #fff; /* Aggiunge uno sfondo bianco per migliorare la leggibilità */
-            z-index: 999; /* Assicura che i pulsanti siano sovrapposti ad altri contenuti, se presenti */
-            text-align: center; /* Allinea i pulsanti al centro */
         }
     }
 </style>
