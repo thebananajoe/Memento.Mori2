@@ -16,17 +16,54 @@
             font-family: Arial, sans-serif;
         }
 
-        #travel-options {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+          .button-green {
+    background-color: #4CAF50; /* Verde */
+  }
 
-        .button {
+  /* Stile per l'intestazione di ciascuna stanza */
+.room-header {
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  background-color: #eee; /* Colore di sfondo per l'intestazione compressa */
+}
+
+/* Stile per l'intestazione della stanza quando è espansa */
+.active, .room-header:hover {
+  background-color: #ccc; /* Colore di sfondo per l'intestazione espansa */
+}
+
+/* Stile per il contenuto della stanza */
+.room-content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f9f9f9;
+}
+
+
+
+   #travel-options {
+    flex-direction: column; /* Imposta i figli in colonna */
+    align-items: flex-start; /* Allinea i pulsanti a sinistra */
+  }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+      .content-box {
+          background-color: #e0e0e0; /* Un grigio più chiaro per i contenuti */
+          margin-top: 5px;
+          padding: 10px;
+      }
+        .box, .button {
             font-size: 16px;
             padding: 15px 20px;
             margin: 10px 0;
@@ -38,13 +75,29 @@
             display: inline-block;
             width: auto;
         }
-
+        .box {
+            background-color: #ffffff;
+            color: #000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
         @media (max-width: 600px) {
-            .button {
+            .button, .box {
                 font-size: 14px;
                 padding: 12px 18px;
             }
         }
+        
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="button" onclick="setEnvironment('Urban')">Urban</div>
+    <div class="button" onclick="setEnvironment('Wilderness')">Wilderness</div>
+    <div id="outcome" class="box" style="display: none;">Esito...</div>
     <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
     <div class="button" onclick="generateDungeon()">Dungeon</div>
     <div class="button" onclick="toggleTravelOptions()">Travel</div>
