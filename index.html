@@ -157,6 +157,11 @@ async function generateDungeon() {
             roomTitle = "Ingresso";
         } else if (i === roomCount - 1) {
             roomTitle = "Uscita";
+        const roomDescription = await fetchFromSheet(`Dungeon!F2:F7`);
+    const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
+    const encounterOutcome = await handleEncounter();
+    const encounterContent = `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
+    roomDiv.innerHTML = `${roomTitle}: ${roomDescription}<br><br>${encounterContent}`;
         } else {
             roomTitle = `Stanza ${i}`;
         }
