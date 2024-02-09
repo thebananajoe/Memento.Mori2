@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scelta dell'Ambiente</title>
     <style>
-        .container {
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
         }
 
           .button-green {
@@ -29,20 +30,6 @@
   outline: none;
   transition: 0.4s;
   background-color: #eee; /* Colore di sfondo per l'intestazione compressa */
-
-  #outcome {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    width: 80%; /* Puoi modificare questa percentuale per controllare la larghezza del box */
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: #ffffff;
-    color: #000;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    display: none;
 }
 
 /* Stile per l'intestazione della stanza quando è espansa */
