@@ -127,15 +127,12 @@
 <script>
 
 function toggleTravelOptions() {
-      var travelOptions = document.getElementById("travel-options");
-      var isVisible = travelOptions.style.display !== "none";
-      if (travelOptions.style.display === "none") {
-        travelOptions.style.display = "flex"; // Usa flex se vuoi che i pulsanti siano in linea
-      } else {
-        travelOptions.style.display = isVisible ? "none" : "flex";
-      }
-    }
+    var travelOptions = document.getElementById("travel-options");
+    // Alterna la visibilità delle opzioni di viaggio.
+    travelOptions.style.display = travelOptions.style.display === "none" ? "flex" : "none";
+}
 
+// Chiamata a questa funzione per nascondere le opzioni di viaggio quando necessario.
 function hideTravelOptions() {
     var travelOptions = document.getElementById("travel-options");
     travelOptions.style.display = "none";
@@ -185,6 +182,7 @@ async function determineRoomContent() {
 
 
 async function generateDungeon() {
+    hideTravelOptions();
     document.getElementById('outcome').style.display = 'none'; // Nasconde il box di esito
     document.getElementById('encounter-nature').style.display = 'none'; // Nasconde il box natura dell'incontro
     const dungeonContainer = document.getElementById('dungeon-container');
@@ -203,6 +201,7 @@ async function generateDungeon() {
 
     // Creazione dell'uscita con incontro garantito
     await createDungeonRoom(dungeonContainer, "Uscita", roomCount - 1, "F", true);
+
 }
 
 async function createDungeonRoom(container, title, index, column, isExit = false) {
@@ -353,6 +352,7 @@ async function rollForBiome(biome) {
 
 
 async function setEnvironment(choice) {
+    hideTravelOptions();
     document.getElementById('dungeon-container').innerHTML = '';
     document.getElementById('encounter-nature').style.display = 'none';
     document.getElementById('outcome').style.display = 'none';
