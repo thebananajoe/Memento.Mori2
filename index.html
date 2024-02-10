@@ -262,8 +262,8 @@ async function createDungeonRoom(container, title, index, isExit = false) {
     let column = rollForColumn < 0.6 ? 'G' : 'F'; // 60% probabilità per G, altrimenti F
 
     // Determina il numero massimo di righe per ciascuna colonna
-    const maxRowsG = 30; // Ad esempio, se la colonna G ha 30 righe con dati
-    const maxRowsF = 20; // E la colonna F ne ha 20
+    const maxRowsG = 40; // Ad esempio, se la colonna G ha 30 righe con dati
+    const maxRowsF = 26; // E la colonna F ne ha 20
 
     // Seleziona il range massimo basato sulla colonna scelta
     const maxRows = column === 'G' ? maxRowsG : maxRowsF;
