@@ -248,18 +248,32 @@ async function generateDungeon() {
 }
 
 
-async function createDungeonRoom(container, title, index, column, isExit = false) {
+async function createDungeonRoom(container, title, index, isExit = false) {
     const roomDiv = document.createElement('div');
     const header = document.createElement('button');
     header.classList.add('room-header');
     header.innerHTML = title;
-    
+
     const contentDiv = document.createElement('div');
     contentDiv.classList.add('room-content');
 
-    const roomDescription = await fetchFromSheet(`Dungeon!${column}2:${column}30`);
-    let roomContent;
+    // Determina la colonna da cui prendere la descrizione
+    const rollForColumn = Math.random(); // Genera un numero casuale tra 0 e 1
+    let column = rollForColumn < 0.6 ? 'G' : 'F'; // 60% probabilità per G, altrimenti F
 
+    // Determina il numero massimo di righe per ciascuna colonna
+    const maxRowsG = 30; // Ad esempio, se la colonna G ha 30 righe con dati
+    const maxRowsF = 20; // E la colonna F ne ha 20
+
+    // Seleziona il range massimo basato sulla colonna scelta
+    const maxRows = column === 'G' ? maxRowsG : maxRowsF;
+
+    // Genera un indice casuale basato sul numero di righe massime della colonna selezionata
+    const randomIndex = Math.floor(Math.random() * maxRows) + 2; // +2 perché assumiamo che i dati inizino dalla riga 2
+
+    const roomDescription = await fetchFromSheet(`Dungeon!${column}${randomIndex}`);
+
+    let roomContent;
     if (isExit) {
         const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
         const encounterOutcome = await handleEncounter();
@@ -277,14 +291,9 @@ async function createDungeonRoom(container, title, index, column, isExit = false
     header.addEventListener("click", function() {
         this.classList.toggle("active");
         var content = this.nextElementSibling;
-        if (content.style.display === "block") {
-            content.style.display = "none";
-        } else {
-            content.style.display = "block";
-        }
+        content.style.display = content.style.display === "block" ? "none" : "block";
     });
 }
-
 
 
 async function fetchFromSheet(range) {
@@ -342,7 +351,7 @@ async function getMoodDetail(mood) {
     const details = {
         "Ostile": ["Le creature sono aggressive, Insultano chiunque incroci il loro cammino e attaccando se si sentono in vantaggio", "Richiedendo cibo o soldi come tributo. Se si sentono in vantaggio, passano all'attacco.", "Si mostrano violenti, e ricattano i PC per lasciarli in pace. Attaccheranno se credono di poter vincere.", "ono provocatori ed aggressivi, cercando il confronto diretto, minacciando ed insultando i PC."],
         "Neutrale": ["Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.", "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.", "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."],
-        "Amichevole": ["Sono disposti a condividere informazioni e assistenza.", "ASono disposti a fornire ai PC cibo, acqua o cure.", "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.", "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."]
+        "Amichevole": ["Sono disposti a condividere informazioni e assistenza.", "Sono disposti a fornire ai PC cibo, acqua o cure.", "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.", "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."]
     };
 
     return details[mood][roll - 1]; // Seleziona una sotto-opzione basata sul tiro di dado
