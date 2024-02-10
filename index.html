@@ -161,7 +161,6 @@
 <div class="content-display">
     <div id="dungeon-loading" style="display: none;">
     <p>Generating dungeon, please wait...</p>
-    <p style="font-size: smaller;">Se dopo 5 secondi non viene generata l'uscita del dungeon, clicca dungeon nuovamente per generarlo di nuovo.</p>
 </div>
     <div id="outcome" class="box" style="display: none;">Esito...</div>
     <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
@@ -232,7 +231,7 @@ async function createDungeonRoom(container, title, index, isExit) {
     if (encounterContent) {
         finalHTML += `<br><br>${encounterContent}`;
     }
-    
+
  contentDiv.innerHTML = finalHTML;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
