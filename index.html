@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scelta dell'Ambiente</title>
     <style>
+
+.app-title {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.app-title h1 {
+    margin: 0;
+    font-size: 24px; /* Aumenta o diminuisci a seconda delle esigenze */
+    color: #333; /* Cambia il colore se necessario */
+}
+
+.app-title p {
+    margin: 0;
+    font-size: 14px; /* Aumenta o diminuisci a seconda delle esigenze */
+    color: #666; /* Cambia il colore se necessario */
+}
+
   body, html {
     height: 100%;
     margin: 0;
@@ -114,6 +132,12 @@
 <body>
 
 <!-- Menu principale con pulsanti fissi in basso -->
+<div class="app-title">
+    <h1>GAME MASTER COMPANION</h1>
+    <p>By Banana Joe Inc.</p>
+</div>
+
+
 <div class="menu-container">
     <div class="button" onclick="setEnvironment('Urban')">Urban</div>
     <div class="button" onclick="setEnvironment('Wilderness')">Wilderness</div>
