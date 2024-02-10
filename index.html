@@ -267,7 +267,7 @@ async function getEncounter(isExit = false) {
     if (isExit || Math.random() < 0.3) { // 100% chance for exit room, 30% for others
         const encounterDescription = await fetchFromSheet('Incontri!A1:A271');
         const encounterOutcome = await handleEncounter(); // Existing function to determine the encounter type
-        encounterContent += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
+        encounterContent += `Incontro: ${encounterDescription}<br>Tipo di incontro: ${encounterOutcome}`;
     }
     return encounterContent; // Return the encounter content
 }
