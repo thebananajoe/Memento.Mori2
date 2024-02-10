@@ -343,7 +343,7 @@ async function rollForBiome(biome) {
 
     // Pesca una casella a caso dalla colonna corrispondente
     const biomeText = await fetchFromSheet(`Biome!${column}2:${column}16`);
-    let encounterContent = `Biome specifico: ${biomeText}<br><br>`;
+    let encounterContent = `${biomeText}<br><br>`;
 
     const roll = Math.ceil(Math.random() * 6);
     let incontriText = "";
