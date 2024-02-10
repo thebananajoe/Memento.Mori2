@@ -183,6 +183,7 @@ function hideTravelOptions() {
 }
     
 async function generateDungeon() {
+    console.log('Inizio generazione dungeon');
     hideTravelOptions();
     document.getElementById('dungeon-loading').style.display = 'block';
     document.getElementById('outcome').style.display = 'none';
@@ -194,12 +195,16 @@ async function generateDungeon() {
     let roomCount = Math.floor(Math.random() * 4) + 3; // Corrected range
 
     for (let i = 0; i < roomCount; i++) {
+    console.log(`Generazione stanza ${i + 1} di ${roomCount}`);
         let roomName = i === 0 ? "Ingresso" : i === roomCount - 1 ? "Uscita" : `Stanza ${i}`;
         let isExit = i === roomCount - 1;
         await createDungeonRoom(dungeonContainer, roomName, i, isExit);
+        console.log(`Fine generazione stanza ${i + 1}`);
     }
 
     document.getElementById('dungeon-loading').style.display = 'none';
+        console.log('Fine generazione dungeon');
+
 }
 
 
