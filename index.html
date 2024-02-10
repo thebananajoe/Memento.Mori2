@@ -181,48 +181,7 @@ function hideTravelOptions() {
     var travelOptions = document.getElementById("travel-options");
     travelOptions.style.display = "none";
 }
-    
-async function determineRoomContent() {
-    const d4Roll = Math.ceil(Math.random() * 4); // Determina il contenuto principale della stanza
-    const d6Roll = Math.ceil(Math.random() * 6); // Decide se c'è un Incontro, niente, o un Tesoro
-    
-    let contentHTML = ""; // Inizializza la stringa che conterrà il contenuto HTML
 
-    // Primo d4 per decidere cosa contiene la stanza
-    switch (d4Roll) {
-        case 1:
-            const puzzleText = await fetchFromSheet('Dungeon!A2:A7');
-            contentHTML += `Per uscire dalla stanza bisogna risolvere un puzzle: ${puzzleText}<br><br>`;
-            break;
-        case 2:
-            const trapText = await fetchFromSheet('Dungeon!B2:B7');
-            contentHTML += `La stanza contiene una Trappola: ${trapText}<br><br>`;
-            break;
-        case 3:
-            const obstacleText = await fetchFromSheet('Dungeon!C2:C7');
-            contentHTML += `${obstacleText}<br><br>`;
-            break;
-        case 4:
-            const anomalyText = await fetchFromSheet('Dungeon!D2:D7');
-            contentHTML += `${anomalyText}<br><br>`;
-            break;
-    }
-
-    // Secondo d6 per decidere se c'è un Incontro, niente, o un Tesoro
-    if (d6Roll === 1) {
-        const encounterDescription = await fetchFromSheet('Incontri!A1:A100'); // Aggiungi la descrizione specifica dell'incontro
-        const encounterOutcome = await handleEncounter(); // Ottiene il tipo di incontro (es. Ostile, Amichevole)
-        contentHTML += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
-    } else if (d6Roll === 6) {
-        // Tesoro
-        const treasureText = await fetchFromSheet('Dungeon!E2:E7');
-        contentHTML += `Nella stanza c'è ${treasureText}`;
-    }
-
-    // Se d6Roll è tra 2 e 5, non aggiungere niente (niente)
-
-    return contentHTML; // Ritorna il contenuto HTML da inserire nel box della stanza
-}
 
 
 async function generateDungeon() {
@@ -248,7 +207,7 @@ async function generateDungeon() {
 }
 
 
-async function createDungeonRoom(container, title, index, isExit = false) {
+async function createDungeonRoom(container, title, index, column, isExit = false) {
     const roomDiv = document.createElement('div');
     const header = document.createElement('button');
     header.classList.add('room-header');
@@ -257,35 +216,38 @@ async function createDungeonRoom(container, title, index, isExit = false) {
     const contentDiv = document.createElement('div');
     contentDiv.classList.add('room-content');
 
-    // Determina la colonna da cui prendere la descrizione
-    const rollForColumn = Math.random(); // Genera un numero casuale tra 0 e 1
-    let column = rollForColumn < 0.6 ? 'G' : 'F'; // 60% probabilità per G, altrimenti F
-
-    // Determina il numero massimo di righe per ciascuna colonna
-    const maxRowsG = 30; // Ad esempio, se la colonna G ha 30 righe con dati
-    const maxRowsF = 20; // E la colonna F ne ha 20
-
-    // Seleziona il range massimo basato sulla colonna scelta
-    const maxRows = column === 'G' ? maxRowsG : maxRowsF;
-
-    // Genera un indice casuale basato sul numero di righe massime della colonna selezionata
-    const randomIndex = Math.floor(Math.random() * maxRows) + 2; // +2 perché assumiamo che i dati inizino dalla riga 2
-
-    const roomDescription = await fetchFromSheet(`Dungeon!${column}${randomIndex}`);
-
-    let roomContent;
+    // Decide the content type based on room type (exit vs. others)
+    let contentHTML = "";
     if (isExit) {
+        // Exit room always has an encounter
         const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
         const encounterOutcome = await handleEncounter();
-        roomContent = `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
+        contentHTML += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
     } else {
-        roomContent = await determineRoomContent();
+        // Non-exit room: Determine content with a random choice
+        const d4Roll = Math.floor(Math.random() * 4) + 1; // For different room types
+        const encounterChance = Math.random();
+        if (d4Roll === 1) {
+            contentHTML += "Description for puzzle.<br><br>";
+        } else if (d4Roll === 2) {
+            contentHTML += "Description for trap.<br><br>";
+        } else if (d4Roll === 3) {
+            contentHTML += "Description for obstacle.<br><br>";
+        } else {
+            contentHTML += "Description for anomaly.<br><br>";
+        }
+
+        // Adding encounters with a 30% probability for normal rooms
+        if (encounterChance < 0.3) {
+            const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
+            const encounterOutcome = await handleEncounter();
+            contentHTML += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
+        }
     }
 
-    contentDiv.innerHTML = `${roomDescription}<br><br>${roomContent}`;
+    contentDiv.innerHTML = contentHTML;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
-
     container.appendChild(roomDiv);
 
     header.addEventListener("click", function() {
