@@ -407,6 +407,7 @@ async function rollForBiome(biome) {
 
 async function setEnvironment(choice) {
     hideTravelOptions();
+    document.getElementById('dungeon-loading').style.display = 'none';
     document.getElementById('dungeon-container').innerHTML = '';
     document.getElementById('encounter-nature').style.display = 'none';
     document.getElementById('outcome').style.display = 'none';
