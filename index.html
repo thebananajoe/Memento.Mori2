@@ -4,24 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scelta dell'Ambiente</title>
-<style>
-body, html {
+    <style>
+  body, html {
     height: 100%;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column; /* Cambiato per gestire meglio il layout */
-    align-items: center;
     background-color: #f5f5f5;
     font-family: Arial, sans-serif;
-}
+    display: block; /* Cambio da flex a block per gestire meglio la posizione degli elementi */
+  }
 
-.button-green {
+  .button-green {
     background-color: #4CAF50; /* Verde */
-}
+  }
 
-/* Stile per l'intestazione di ciascuna stanza */
-.room-header {
+  /* Stile per l'intestazione di ciascuna stanza */
+  .room-header {
     cursor: pointer;
     padding: 10px;
     width: 100%;
@@ -30,108 +28,79 @@ body, html {
     outline: none;
     transition: 0.4s;
     background-color: #eee; /* Colore di sfondo per l'intestazione compressa */
-}
+  }
 
-/* Stile per l'intestazione della stanza quando è espansa */
-.active, .room-header:hover {
+  /* Stile per l'intestazione della stanza quando è espansa */
+  .active, .room-header:hover {
     background-color: #ccc; /* Colore di sfondo per l'intestazione espansa */
-}
+  }
 
-/* Stile per il contenuto della stanza */
-.room-content {
+  /* Stile per il contenuto della stanza */
+  .room-content {
     padding: 0 18px;
     display: none;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
     background-color: #f9f9f9;
-}
+  }
 
-#travel-options {
+  #travel-options {
     flex-direction: column; /* Imposta i figli in colonna */
-    align-items: flex-start; /* Allinea i pulsanti a sinistra */
-}
+    align-items: center; /* Modifica per centrare i pulsanti */
+    display: none; /* Nascondi inizialmente le opzioni di viaggio */
+    position: fixed; /* Fissa al centro in basso */
+    bottom: 60px; /* Alza sopra il menu principale */
+    left: 50%;
+    transform: translateX(-50%);
+  }
 
-.container {
-    text-align: center;
+  .menu-container {
+    position: fixed; /* Posizionamento fisso */
+    bottom: 10px; /* Posizionato in basso */
+    left: 50%; /* Centratura */
+    transform: translateX(-50%); /* Ajusta per centrare esattamente */
+    display: flex;
+    gap: 10px; /* Spazio tra i bottoni */
+  }
+
+  .content-display, .container {
+    position: absolute; /* Centratura assoluta */
+    top: 50%; /* Al centro verticalmente */
+    left: 50%; /* Al centro orizzontalmente */
+    transform: translate(-50%, -50%); /* Ajusta la posizione */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 80%; /* Imposta un'altezza massima */
+    overflow-y: auto; /* Permette lo scroll se necessario */
     padding: 20px;
-    box-sizing: border-box;
-}
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Ombra per migliorare la leggibilità */
+    background-color: #fff; /* Sfondo bianco per migliorare la visibilità */
+    border-radius: 5px; /* Bordi arrotondati per estetica */
+  }
 
-.content-box {
-    background-color: #e0e0e0; /* Un grigio più chiaro per i contenuti */
-    margin-top: 5px;
-    padding: 10px;
-}
-
-.box, .button {
-    font-size: 16px;
-    padding: 15px 20px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    display: inline-block;
-    width: auto;
-}
-
-.box {
-    background-color: #ffffff;
-    color: #000;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.button:hover {
-    background-color: #0056b3;
-}
-
-@media (max-width: 600px) {
+  @media (max-width: 600px) {
     .button, .box {
-        font-size: 14px;
-        padding: 12px 18px;
+      font-size: 14px;
+      padding: 12px 18px;
     }
-}
-
-.menu-container {
-    position: fixed; /* Fissa il container in una posizione */
-    bottom: 0; /* Posiziona il container in basso alla pagina */
-    left: 50%; /* Centra il container orizzontalmente */
-    transform: translateX(-50%); /* Ajusta la centratura tenendo conto della larghezza del container */
-    text-align: center; /* Assicura che i bottoni siano allineati al centro nel container */
-    z-index: 1000; /* Assicura che il menu sia sempre sopra gli altri elementi */
-    width: 100%; /* Estende la larghezza al 100% dello schermo */
-}
-
-.content-display {
-    position: absolute; /* Posizione assoluta per centrare facilmente */
-    top: 50%; /* Centra verticalmente */
-    left: 50%; /* Centra orizzontalmente */
-    transform: translate(-50%, -50%); /* Ajusta la centratura */
-    width: auto; /* O impostare una larghezza fissa se necessario */
-    max-height: 80%; /* Limita l'altezza massima per evitare sovrapposizioni con il menu */
-    overflow-y: auto; /* Permette lo scroll se il contenuto supera l'altezza massima */
-    padding: 20px; /* Spazio interno per non avere testo aderente ai bordi */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Opzionale: aggiunge un'ombra per migliorare la leggibilità */
-    background: #fff; /* Sfondo bianco per il contenuto */
-    border-radius: 5px; /* Bordi arrotondati */
-}
+  }
 </style>
+
 
 </head>
 <body>
 
+<!-- Menu principale con pulsanti fissi in basso -->
 <div class="menu-container">
     <div class="button" onclick="setEnvironment('Urban')">Urban</div>
     <div class="button" onclick="setEnvironment('Wilderness')">Wilderness</div>
-    <div id="outcome" class="box" style="display: none;">Esito...</div>
-    <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
     <div class="button" onclick="generateDungeon()">Dungeon</div>
     <div class="button" onclick="toggleTravelOptions()">Travel</div>
-    <div id="dungeon-container" class="container"></div>
 </div>
 
-     <div id="travel-options" class="container" style="display: none;">
+<!-- Opzioni di viaggio, che appare sopra il menu principale quando attivato -->
+<div id="travel-options" style="display: none;">
   <div class="button button-green" onclick="setEnvironment('Foresta')">Foresta</div>
   <div class="button button-green" onclick="setEnvironment('Pianura')">Pianura</div>
   <div class="button button-green" onclick="setEnvironment('Steppa')">Steppa</div>
@@ -140,6 +109,13 @@ body, html {
   <div class="button button-green" onclick="setEnvironment('Palude')">Palude</div>
   <div class="button button-green" onclick="setEnvironment('Acquatico')">Acquatico</div>
   <div class="button button-green" onclick="setEnvironment('Giungla')">Giungla</div>
+</div>
+
+<!-- Contenitore per i contenuti generati dai pulsanti, posizionato al centro -->
+<div class="content-display">
+    <div id="outcome" class="box" style="display: none;">Esito...</div>
+    <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
+    <div id="dungeon-container"></div>
 </div>
 
 <script>
