@@ -232,6 +232,10 @@ async function createDungeonRoom(container, title, index, isExit) {
         finalHTML += `<br><br>${encounterContent}`;
     }
 
+      if (isExit || Math.random() < 0.1) {
+        finalHTML += `<br><br>Nella stanza c'è un tesoro`;
+    }
+
  contentDiv.innerHTML = finalHTML;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
