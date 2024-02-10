@@ -297,7 +297,7 @@ async function getSpecialElement() {
 
 async function getEncounter(isExit = false) {
     let encounterContent = "";
-    if (isExit || Math.random() < 0.3) { // 100% chance for exit room, 30% for others
+    if (isExit || Math.random() < 0.15) { // 100% chance for exit room, 30% for others
         const encounterDescription = await fetchFromSheet('Incontri!A1:A271');
         const encounterOutcome = await handleEncounter(); // Existing function to determine the encounter type
         encounterContent += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
