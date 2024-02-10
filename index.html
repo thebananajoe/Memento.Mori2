@@ -326,14 +326,24 @@ async function rollForBiome(biome) {
     document.getElementById('outcome').style.display = 'none';
     document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
 
-    // Questa variabile `encounterContent` verrà usata per accumulare il contenuto dell'incontro
-    let encounterContent = "";
+    // Mappa i biomi alle rispettive colonne in Google Sheets
+    const biomeColumns = {
+        "Foresta": "A",
+        "Pianura": "B",
+        "Steppa": "C",
+        "Deserto": "D",
+        "Montagna": "E",
+        "Palude": "F",
+        "Acquatico": "G",
+        "Giungla": "H"
+    };
 
-    // Se il bioma non è "Wilderness", pesca una casella a caso dal foglio "Biome"
-    if (biome !== 'Wilderness') {
-        const biomeText = await fetchFromSheet('Biome!A1:A12');
-        encounterContent += `Biome specifico: ${biomeText}<br><br>`;
-    }
+    // Determina la colonna da utilizzare basata sul bioma scelto
+    const column = biomeColumns[biome] || "A"; // Usa "A" come default se il bioma non è mappato
+
+    // Pesca una casella a caso dalla colonna corrispondente
+    const biomeText = await fetchFromSheet(`Biome!${column}2:${column}16`);
+    let encounterContent = `Biome specifico: ${biomeText}<br><br>`;
 
     const roll = Math.ceil(Math.random() * 6);
     let incontriText = "";
