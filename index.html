@@ -186,66 +186,49 @@ function hideTravelOptions() {
 
 async function generateDungeon() {
     hideTravelOptions();
-    document.getElementById('dungeon-loading').style.display = 'block'; // Mostra il messaggio di caricamento
-    document.getElementById('outcome').style.display = 'none';
-    document.getElementById('encounter-nature').style.display = 'none';
+    document.getElementById('dungeon-loading').style.display = 'block'; // Mostra messaggio di caricamento
     const dungeonContainer = document.getElementById('dungeon-container');
     dungeonContainer.innerHTML = '';
+    let roomCount = Math.floor(Math.random() * 4) + 2; // da 2 a 5 stanze
 
-    let roomCount = Math.floor(Math.random() * 4) + 2;
-
-    await createDungeonRoom(dungeonContainer, "Ingresso", 0, "F");
-
-    for (let i = 1; i <= roomCount - 1; i++) {
-        if(i === roomCount - 1) {
-            await createDungeonRoom(dungeonContainer, "Uscita", i, "F", true);
-            document.getElementById('dungeon-loading').style.display = 'none'; // Nasconde il messaggio di caricamento dopo la generazione dell'uscita
-        } else {
-            await createDungeonRoom(dungeonContainer, `Stanza ${i}`, i, "F");
-        }
+    // Genera le stanze del dungeon
+    for (let i = 0; i < roomCount; i++) {
+        let isExit = i === roomCount - 1; // L'ultima stanza è l'uscita
+        await createDungeonRoom(dungeonContainer, i === 0 ? "Ingresso" : isExit ? "Uscita" : `Stanza ${i}`, i, isExit);
     }
+    document.getElementById('dungeon-loading').style.display = 'none'; // Nasconde il messaggio di caricamento
 }
 
+async function createDungeonRoom(container, title, index, isExit = false) {
+    // Logica per determinare la descrizione della stanza
+    let descriptionColumn = Math.random() < 0.6 ? 'G' : 'F'; // 60% G, 40% F
+    const description = await fetchFromSheet(`Dungeon!${descriptionColumn}2:${descriptionColumn}30`);
 
-async function createDungeonRoom(container, title, index, column, isExit = false) {
+    // Logica per determinare se c'è un incontro, tesoro o nulla
+    let content = "";
+    if (isExit || Math.random() < 0.3) { // 100% incontro se uscita, altrimenti 30%
+        const encounterDescription = await fetchFromSheet('Incontri!A1:A100'); // Aggiungi la descrizione specifica dell'incontro
+        const encounterOutcome = await handleEncounter(); // Ottiene il tipo di incontro (es. Ostile, Amichevole)
+        contentHTML += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
+    } else if (Math.random() < 0.1) { // 10% possibilità di tesoro
+        const treasureText = await fetchFromSheet('Dungeon!E2:E7');
+        contentHTML += `Nella stanza c'è ${treasureText}`;
+    }
+    
+    // Logica per elementi particolari
+    if (Math.random() < 0.5) { // 50% possibilità di elemento particolare
+        const specialElement = await fetchSpecialElement();
+        content += specialElement;
+    }
+
+    // Creazione effettiva della stanza
     const roomDiv = document.createElement('div');
     const header = document.createElement('button');
     header.classList.add('room-header');
     header.innerHTML = title;
-
     const contentDiv = document.createElement('div');
     contentDiv.classList.add('room-content');
-
-    // Decide the content type based on room type (exit vs. others)
-    let contentHTML = "";
-    if (isExit) {
-        // Exit room always has an encounter
-        const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
-        const encounterOutcome = await handleEncounter();
-        contentHTML += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
-    } else {
-        // Non-exit room: Determine content with a random choice
-        const d4Roll = Math.floor(Math.random() * 4) + 1; // For different room types
-        const encounterChance = Math.random();
-        if (d4Roll === 1) {
-            contentHTML += "Description for puzzle.<br><br>";
-        } else if (d4Roll === 2) {
-            contentHTML += "Description for trap.<br><br>";
-        } else if (d4Roll === 3) {
-            contentHTML += "Description for obstacle.<br><br>";
-        } else {
-            contentHTML += "Description for anomaly.<br><br>";
-        }
-
-        // Adding encounters with a 30% probability for normal rooms
-        if (encounterChance < 0.3) {
-            const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
-            const encounterOutcome = await handleEncounter();
-            contentHTML += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
-        }
-    }
-
-    contentDiv.innerHTML = contentHTML;
+    contentDiv.innerHTML = `${description}<br><br>${content}`;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
     container.appendChild(roomDiv);
@@ -255,6 +238,32 @@ async function createDungeonRoom(container, title, index, column, isExit = false
         var content = this.nextElementSibling;
         content.style.display = content.style.display === "block" ? "none" : "block";
     });
+}
+
+// Funzione per ottenere un elemento speciale (trappola, ostacolo, anomalia, puzzle)
+async function fetchSpecialElement() {
+    if (Math.random() <= 0.5) { // 50% probabilità di trovare un elemento speciale
+        // Determina casualmente quale elemento speciale trovare
+        const specialRoll = Math.ceil(Math.random() * 4);
+        switch(specialRoll) {
+            case 1:
+                const trapText = await fetchFromSheet('Dungeon!A2:A7');
+                return `Trappola: ${trapText}`;
+            case 2:
+                const obstacleText = await fetchFromSheet('Dungeon!B2:B7');
+                return `Ostacolo: ${obstacleText}`;
+            case 3:
+                const anomalyText = await fetchFromSheet('Dungeon!C2:C7');
+                return `Anomalia: ${anomalyText}`;
+            case 4:
+                const puzzleText = await fetchFromSheet('Dungeon!D2:D7');
+                return `Puzzle: ${puzzleText}`;
+            default:
+                return ''; // In caso di errore, non ritorna niente
+        }
+    } else {
+        return ''; // Nessun elemento speciale trovato
+    }
 }
 
 
