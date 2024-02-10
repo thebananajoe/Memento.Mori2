@@ -213,7 +213,7 @@ async function createDungeonRoom(container, title, index, isExit) {
     let specialElement = await getSpecialElement(isExit);
     let encounterContent = isExit ? await getEncounter(true) : await getEncounter();
 
-    contentDiv.innerHTML = `${roomDescription}<br>${specialElement}<br>${encounterContent}`;
+    contentDiv.innerHTML = `${roomDescription}<br><br>${specialElement}<br><br>${encounterContent}`;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
     container.appendChild(roomDiv);
@@ -241,7 +241,7 @@ async function getEncounter(forceEncounter = false) {
 async function getRandomRoomDescription() {
     // Decide which column to use based on the probability
     const column = Math.random() < 0.6 ? 'G' : 'F';
-    const range = `Dungeon!${column}2:${column}30`; // Adjust the range according to your sheet's actual data
+    const range = `Dungeon!${column}2:${column}40`; // Adjust the range according to your sheet's actual data
     return await fetchFromSheet(range);
 }
 
@@ -265,9 +265,9 @@ async function getSpecialElement() {
 async function getEncounter(isExit = false) {
     let encounterContent = "";
     if (isExit || Math.random() < 0.3) { // 100% chance for exit room, 30% for others
-        const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
+        const encounterDescription = await fetchFromSheet('Incontri!A1:A271');
         const encounterOutcome = await handleEncounter(); // Existing function to determine the encounter type
-        encounterContent += `Incontro: ${encounterDescription}<br>Tipo di incontro: ${encounterOutcome}`;
+        encounterContent += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
     }
     return encounterContent; // Return the encounter content
 }
