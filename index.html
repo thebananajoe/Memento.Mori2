@@ -49,14 +49,14 @@
     bottom: 70px; /* Posizionato sopra il menu principale */
     left: 50%; /* Centratura orizzontale */
     transform: translateX(-50%); /* Ajusta per centrare esattamente */
-    gap: 10px; /* Spazio tra i bottoni */
+    gap: 4px; /* Spazio tra i bottoni */
     z-index: 1001; /* Assicurati che sia sopra il menu principale */
 }
 
 .button-green {
-    padding: 10px 20px; /* Ajusta il padding per ridurre le dimensioni se necessario */
-    font-size: 14px; /* Ajusta la dimensione del font se necessario */
-    border-radius: 5px; /* Bordi arrotondati */
+    padding: 5px 10px; /* Riduci il padding per ridurre le dimensioni del pulsante */
+    font-size: 12px; /* Riduci la dimensione del font per far stare più testo */
+    margin-right: 4px; /* Riduci lo spazio tra i pulsanti */
 }
 
   .menu-container {
@@ -128,13 +128,18 @@
 
 function toggleTravelOptions() {
       var travelOptions = document.getElementById("travel-options");
+      var isVisible = travelOptions.style.display !== "none";
       if (travelOptions.style.display === "none") {
         travelOptions.style.display = "flex"; // Usa flex se vuoi che i pulsanti siano in linea
       } else {
-        travelOptions.style.display = "none";
+        travelOptions.style.display = isVisible ? "none" : "flex";
       }
     }
 
+function hideTravelOptions() {
+    var travelOptions = document.getElementById("travel-options");
+    travelOptions.style.display = "none";
+}
     
 async function determineRoomContent() {
     const d4Roll = Math.ceil(Math.random() * 4); // Determina il contenuto principale della stanza
