@@ -251,10 +251,10 @@ async function getSpecialElement() {
         const elementType = Math.floor(Math.random() * 4) + 1; // Decide the element type
         let range = '';
         switch (elementType) {
-            case 1: range = 'Dungeon!A2:A7'; break; // Puzzle
-            case 2: range = 'Dungeon!B2:B7'; break; // Trap
-            case 3: range = 'Dungeon!C2:C7'; break; // Obstacle
-            case 4: range = 'Dungeon!D2:D7'; break; // Anomaly
+            case 1: range = 'Puzzle: Dungeon!A2:A7'; break; // Puzzle
+            case 2: range = 'Trappola: Dungeon!B2:B7'; break; // Trap
+            case 3: range = 'Ostacolo: Dungeon!C2:C7'; break; // Obstacle
+            case 4: range = 'Anomalia: Dungeon!D2:D7'; break; // Anomaly
         }
         contentHTML += await fetchFromSheet(range);
     }
