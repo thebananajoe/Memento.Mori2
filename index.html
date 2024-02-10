@@ -40,25 +40,40 @@
     background-color: #f9f9f9;
   }
 
-  #travel-options {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      position: fixed;
-      bottom: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      gap: 1px; /* Potresti volerlo mantenere piccolo per minimizzare lo spazio tra i pulsanti */
-      z-index: 1001;
-      flex-wrap: wrap;
-  }
+ #travel-options {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 70px;
+    left: 0;
+    right: 0;
+    transform: translateX(0%);
+    gap: 1px;
+    z-index: 1001;
+    flex-wrap: wrap;
+    padding: 0 10px; /* Aggiungi un po' di padding ai lati per non far toccare i pulsanti ai bordi dello schermo */
+}
 
-  .button-green {
-      padding: 2px 2px; /* Ulteriore riduzione del padding per rendere i pulsanti più compatti */
-      font-size: 8px; /* Mantieni piccola la dimensione del font se necessario */
-      margin: 0 1px; /* Riduci ulteriormente lo spazio tra i pulsanti se necessario */
-  }
+.button-green {
+    padding: 2px 2px;
+    font-size: 8px;
+    margin: 0 1px;
+}
+
+@media (max-width: 600px) {
+    #travel-options {
+        justify-content: space-around; /* Distribuisce i pulsanti uniformemente */
+    }
+
+    .button-green {
+        padding: 2px 5px; /* Aumenta leggermente il padding per una migliore manipolabilità */
+        font-size: 10px; /* Aumenta la dimensione del font per migliorare la leggibilità */
+        margin: 2px; /* Aumenta lo spazio tra i pulsanti per evitare pressioni accidentali */
+    }
+}
+
 
   .menu-container {
     position: fixed; /* Posizionamento fisso */
