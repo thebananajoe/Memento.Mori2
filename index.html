@@ -273,16 +273,21 @@ async function createDungeonRoom(container, title, index, isExit = false) {
 
     const roomDescription = await fetchFromSheet(`Dungeon!${column}${randomIndex}`);
 
-    let roomContent;
-    if (isExit) {
+   let encounterChance = isExit ? 1.0 : 0.3; // 100% per l'uscita, 30% per le altre stanze
+    let shouldGenerateEncounter = Math.random() < encounterChance;
+    
+    let roomContent = '';
+    if (shouldGenerateEncounter) {
+        // Genera il contenuto dell'incontro
         const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
         const encounterOutcome = await handleEncounter();
         roomContent = `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
     } else {
-        roomContent = await determineRoomContent();
+        // Utilizza un contenuto di stanza generico o lascialo vuoto
+        roomContent = "Questa stanza sembra tranquilla...";
     }
 
-    contentDiv.innerHTML = `${roomDescription}<br><br>${roomContent}`;
+    contentDiv.innerHTML = roomContent;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
 
