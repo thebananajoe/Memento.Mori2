@@ -190,7 +190,8 @@ async function generateDungeon() {
     const dungeonContainer = document.getElementById('dungeon-container');
     dungeonContainer.innerHTML = '';
 
-    let roomCount = Math.floor(Math.random() * 4) + 2; // Generates between 2 and 5 rooms, including entrance and exit
+    // Adjust to generate 1 to 4 additional rooms, so total rooms would be 3 to 6 including entrance and exit
+    let roomCount = Math.floor(Math.random() * 4) + 3; // Corrected range
 
     for (let i = 0; i < roomCount; i++) {
         let roomName = i === 0 ? "Ingresso" : i === roomCount - 1 ? "Uscita" : `Stanza ${i}`;
@@ -200,6 +201,7 @@ async function generateDungeon() {
 
     document.getElementById('dungeon-loading').style.display = 'none';
 }
+
 
 async function createDungeonRoom(container, title, index, isExit) {
     const roomDiv = document.createElement('div');
@@ -251,10 +253,10 @@ async function getSpecialElement() {
         const elementType = Math.floor(Math.random() * 4) + 1; // Decide the element type
         let range = '';
         switch (elementType) {
-            case 1: range = 'Puzzle: Dungeon!A2:A7'; break; // Puzzle
-            case 2: range = 'Trappola: Dungeon!B2:B7'; break; // Trap
-            case 3: range = 'Ostacolo: Dungeon!C2:C7'; break; // Obstacle
-            case 4: range = 'Anomalia: Dungeon!D2:D7'; break; // Anomaly
+            case 1: range = 'Dungeon!A2:A7'; break; // Puzzle
+            case 2: range = 'Dungeon!B2:B7'; break; // Trap
+            case 3: range = 'Dungeon!C2:C7'; break; // Obstacle
+            case 4: range = 'Dungeon!D2:D7'; break; // Anomaly
         }
         contentHTML += await fetchFromSheet(range);
     }
@@ -267,7 +269,7 @@ async function getEncounter(isExit = false) {
     if (isExit || Math.random() < 0.3) { // 100% chance for exit room, 30% for others
         const encounterDescription = await fetchFromSheet('Incontri!A1:A271');
         const encounterOutcome = await handleEncounter(); // Existing function to determine the encounter type
-        encounterContent += `Incontro: ${encounterDescription}<br>Tipo di incontro: ${encounterOutcome}`;
+        encounterContent += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
     }
     return encounterContent; // Return the encounter content
 }
