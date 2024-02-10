@@ -135,24 +135,16 @@
 
 <!-- Contenitore per i contenuti generati dai pulsanti, posizionato al centro -->
 <div class="content-display">
+    <div id="dungeon-loading" style="display: none;">
+    <p>Generating dungeon, please wait...</p>
+    <p style="font-size: smaller;">Se dopo 5 secondi non viene generata l'uscita del dungeon, clicca dungeon nuovamente per generarlo di nuovo.</p>
+</div>
     <div id="outcome" class="box" style="display: none;">Esito...</div>
     <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
     <div id="dungeon-container"></div>
 </div>
 
 <script>
-
-async function fetchWithRetry(url, retries = 3) {
-        for (let i = 0; i < retries; i++) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Richiesta fallita.');
-                return await response.json();
-            } catch(error) {
-                if (i === retries - 1) throw error;
-            }
-        }
-    }
 
 function toggleTravelOptions() {
     var travelOptions = document.getElementById("travel-options");
@@ -211,26 +203,26 @@ async function determineRoomContent() {
 
 async function generateDungeon() {
     hideTravelOptions();
-    document.getElementById('outcome').style.display = 'none'; // Nasconde il box di esito
-    document.getElementById('encounter-nature').style.display = 'none'; // Nasconde il box natura dell'incontro
+    document.getElementById('dungeon-loading').style.display = 'block'; // Mostra il messaggio di caricamento
+    document.getElementById('outcome').style.display = 'none';
+    document.getElementById('encounter-nature').style.display = 'none';
     const dungeonContainer = document.getElementById('dungeon-container');
-    dungeonContainer.innerHTML = ''; // Pulisci il contenitore precedente
+    dungeonContainer.innerHTML = '';
 
-    // Genera sempre un ingresso, stanze intermedie e un'uscita
-    let roomCount = Math.floor(Math.random() * 4) + 2; // Numero casuale di stanze intermedie da 2 a 5
+    let roomCount = Math.floor(Math.random() * 4) + 2;
 
-    // Creazione dell'ingresso
     await createDungeonRoom(dungeonContainer, "Ingresso", 0, "F");
 
-    // Creazione delle stanze intermedie
-    for (let i = 1; i < roomCount - 1; i++) {
-        await createDungeonRoom(dungeonContainer, `Stanza ${i}`, i, "F");
+    for (let i = 1; i <= roomCount - 1; i++) {
+        if(i === roomCount - 1) {
+            await createDungeonRoom(dungeonContainer, "Uscita", i, "F", true);
+            document.getElementById('dungeon-loading').style.display = 'none'; // Nasconde il messaggio di caricamento dopo la generazione dell'uscita
+        } else {
+            await createDungeonRoom(dungeonContainer, `Stanza ${i}`, i, "F");
+        }
     }
-
-    // Creazione dell'uscita con incontro garantito
-    await createDungeonRoom(dungeonContainer, "Uscita", roomCount - 1, "F", true);
-
 }
+
 
 async function createDungeonRoom(container, title, index, column, isExit = false) {
     const roomDiv = document.createElement('div');
