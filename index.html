@@ -262,8 +262,8 @@ async function createDungeonRoom(container, title, index, isExit = false) {
     let column = rollForColumn < 0.6 ? 'G' : 'F'; // 60% probabilità per G, altrimenti F
 
     // Determina il numero massimo di righe per ciascuna colonna
-    const maxRowsG = 40; // Ad esempio, se la colonna G ha 30 righe con dati
-    const maxRowsF = 26; // E la colonna F ne ha 20
+    const maxRowsG = 30; // Ad esempio, se la colonna G ha 30 righe con dati
+    const maxRowsF = 20; // E la colonna F ne ha 20
 
     // Seleziona il range massimo basato sulla colonna scelta
     const maxRows = column === 'G' ? maxRowsG : maxRowsF;
@@ -273,21 +273,16 @@ async function createDungeonRoom(container, title, index, isExit = false) {
 
     const roomDescription = await fetchFromSheet(`Dungeon!${column}${randomIndex}`);
 
-   let encounterChance = isExit ? 1.0 : 0.3; // 100% per l'uscita, 30% per le altre stanze
-    let shouldGenerateEncounter = Math.random() < encounterChance;
-    
-    let roomContent = '';
-    if (shouldGenerateEncounter) {
-        // Genera il contenuto dell'incontro
+    let roomContent;
+    if (isExit) {
         const encounterDescription = await fetchFromSheet('Incontri!A1:A100');
         const encounterOutcome = await handleEncounter();
         roomContent = `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
     } else {
-        // Utilizza un contenuto di stanza generico o lascialo vuoto
-        roomContent = "Questa stanza sembra tranquilla...";
+        roomContent = await determineRoomContent();
     }
 
-    contentDiv.innerHTML = roomContent;
+    contentDiv.innerHTML = `${roomDescription}<br><br>${roomContent}`;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
 
@@ -299,6 +294,8 @@ async function createDungeonRoom(container, title, index, isExit = false) {
         content.style.display = content.style.display === "block" ? "none" : "block";
     });
 }
+
+
 
 
 async function fetchFromSheet(range) {
