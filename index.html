@@ -191,11 +191,11 @@ async function generateDungeon() {
     const dungeonContainer = document.getElementById('dungeon-container');
     dungeonContainer.innerHTML = '';
 
-    // Adjust to generate 1 to 4 additional rooms, so total rooms would be 3 to 6 including entrance and exit
-    let roomCount = Math.floor(Math.random() * 4) + 3; // Corrected range
+    // Genera un numero totale di stanze tra 2 e 4, inclusi ingresso e uscita
+    let roomCount = Math.floor(Math.random() * 3) + 2; // Genera da 2 a 4 stanze totali
 
     for (let i = 0; i < roomCount; i++) {
-    console.log(`Generazione stanza ${i + 1} di ${roomCount}`);
+        console.log(`Generazione stanza ${i + 1} di ${roomCount}`);
         let roomName = i === 0 ? "Ingresso" : i === roomCount - 1 ? "Uscita" : `Stanza ${i}`;
         let isExit = i === roomCount - 1;
         await createDungeonRoom(dungeonContainer, roomName, i, isExit);
@@ -203,9 +203,9 @@ async function generateDungeon() {
     }
 
     document.getElementById('dungeon-loading').style.display = 'none';
-        console.log('Fine generazione dungeon');
-
+    console.log('Fine generazione dungeon');
 }
+
 
 
 async function createDungeonRoom(container, title, index, isExit) {
@@ -220,7 +220,20 @@ async function createDungeonRoom(container, title, index, isExit) {
     let specialElement = await getSpecialElement(isExit);
     let encounterContent = isExit ? await getEncounter(true) : await getEncounter();
 
-    contentDiv.innerHTML = `${roomDescription}<br><br>${specialElement}<br><br>${encounterContent}`;
+    // Initialize the final HTML with room description
+    let finalHTML = `${roomDescription}`;
+    
+    // Append special element if exists, preceded by line breaks
+    if (specialElement) {
+        finalHTML += `<br><br>${specialElement}`;
+    }
+
+    // Append encounter content if exists, preceded by line breaks
+    if (encounterContent) {
+        finalHTML += `<br><br>${encounterContent}`;
+    }
+    
+ contentDiv.innerHTML = finalHTML;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
     container.appendChild(roomDiv);
