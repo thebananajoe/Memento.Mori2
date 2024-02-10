@@ -269,16 +269,30 @@ async function getSpecialElement() {
     if (Math.random() < 0.5) { // 50% chance to include a special element
         const elementType = Math.floor(Math.random() * 4) + 1; // Decide the element type
         let range = '';
+        let elementTitle = ''; // Title for the element
         switch (elementType) {
-            case 1: range = 'Dungeon!A2:A7'; break; // Puzzle
-            case 2: range = 'Dungeon!B2:B7'; break; // Trap
-            case 3: range = 'Dungeon!C2:C7'; break; // Obstacle
-            case 4: range = 'Dungeon!D2:D7'; break; // Anomaly
+            case 1:
+                range = 'Dungeon!A2:A7';
+                elementTitle = 'Puzzle:';
+                break; // Puzzle
+            case 2:
+                range = 'Dungeon!B2:B7';
+                elementTitle = 'Trappola!!';
+                break; // Trap
+            case 3:
+                range = 'Dungeon!C2:C7';
+                elementTitle = 'Ostacolo!';
+                break; // Obstacle
+            case 4:
+                range = 'Dungeon!D2:D7';
+                elementTitle = 'Anomalia:';
+                break; // Anomaly
         }
-        contentHTML += await fetchFromSheet(range);
+        contentHTML += elementTitle + " " + await fetchFromSheet(range);
     }
     return contentHTML; // Return the HTML content for the special element
 }
+
 
 
 async function getEncounter(isExit = false) {
