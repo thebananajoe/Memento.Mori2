@@ -397,7 +397,7 @@ async function rollForBiome(biome) {
     const column = biomeColumns[biome] || "A"; // Usa "A" come default se il bioma non è mappato
 
     // Pesca una casella a caso dalla colonna corrispondente
-    const biomeText = await fetchFromSheet(`Biome!${column}2:${column}16`);
+    const biomeText = await fetchFromSheet(`Biome!${column}2:${column}33`);
     let encounterContent = `${biomeText}<br><br>`;
 
     const roll = Math.ceil(Math.random() * 6);
