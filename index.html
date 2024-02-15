@@ -377,7 +377,7 @@ async function handleEncounter() {
             break;
         case 4:
         case 5:
-            mood = "Si può negoziare";
+            mood = "Neutrale";
             detail = await getMoodDetail(mood); // Ottieni il dettaglio specifico per "Si può negoziare"
             break;
         case 6:
@@ -408,11 +408,15 @@ function generateLoot() {
 async function getMoodDetail(mood) {
     const details = {
         "Ostile": ["Le creature sono aggressive, Insultano chiunque incroci il loro cammino e attaccando se si sentono in vantaggio", "Richiedendo cibo o soldi come tributo. Se si sentono in vantaggio, passano all'attacco.", "Si mostrano violenti, e ricattano i PC per lasciarli in pace. Attaccheranno se credono di poter vincere.", "ono provocatori ed aggressivi, cercando il confronto diretto, minacciando ed insultando i PC."],
-        "Neutrale": ["Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.", "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.", "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi.","Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."],
-        "Amichevole": ["Sono disposti a condividere informazioni e assistenza.", "ASono disposti a fornire ai PC cibo, acqua o cure.", "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.", "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio.", "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."]
+        "Neutrale": ["Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.", "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.", "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."],
+        "Amichevole": ["Sono disposti a condividere informazioni e assistenza.", "ASono disposti a fornire ai PC cibo, acqua o cure.", "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.", "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."]
     };
-    const validMood = details[mood] ? mood : "Ostile"; // Default to "Ostile" if mood is not found
-    const moodDetails = details[validMood];
+ if (!details[mood]) {
+        console.error("Mood non definito:", mood);
+        return "Dettaglio non disponibile per " + mood;
+    }
+
+    const moodDetails = details[mood];
     const roll = Math.floor(Math.random() * moodDetails.length);
     return moodDetails[roll];
 }
