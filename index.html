@@ -446,6 +446,20 @@ async function rollForBiome(biome) {
             incontriText = await fetchFromSheet('Incontri!A1:A271');
             const encounterOutcome = await handleEncounter();
             encounterContent += `Incontrate: ${incontriText}<br><br>Tipo di incontro: ${encounterOutcome}`;
+            if (encounterOutcome.includes("Ostile")) {
+                encounterContent += `<br><br>Se sconfitti il loot è: `;
+            const lootChance = Math.random();
+            console.log(`LootChance: ${lootChance}`); // Per vedere il valore di lootChance
+            if (lootChance < 0.1) {
+                const gilAmount = (Math.floor(Math.random() * 10) + 3) * 100;
+                encounterContent += `tesoro + ${gilAmount} gil`;
+            } else if (lootChance < 0.4) {
+                const gilAmount = (Math.floor(Math.random() * 4) + 2) * 100;
+                encounterContent += `${gilAmount} gil`;
+            } else {
+                const gilAmount = (Math.floor(Math.random() * 6) + 1) * 100;
+                encounterContent += `${gilAmount} gil`;
+            }
             const visibilityRoll = Math.random() < 0.5;
             encounterContent += `<br><br>${visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro."}`;
             break;
