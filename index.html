@@ -381,11 +381,13 @@ async function handleEncounter() {
     switch (roll) {
         case 1:
             mood = "Vi Attacca immediatamente.";
+            lootContent = generateLoot(); // Assumi che generateLoot() sia una funzione che restituisce la stringa del loot
             break;
         case 2:
         case 3:
             mood = "Ostile";
             detail = await getMoodDetail(mood); // Ottieni il dettaglio specifico per "Ostile"
+            lootContent = generateLoot(); // Assumi che generateLoot() sia una funzione che restituisce la stringa del loot
             break;
         case 4:
         case 5:
@@ -397,8 +399,25 @@ async function handleEncounter() {
             detail = await getMoodDetail(mood); // Ottieni il dettaglio specifico per "Amichevole"
             break;
     }
-    return mood + (detail ? ": " + detail : ""); // Concatena il mood con il suo dettaglio
+    return mood + (detail ? ": " + detail : "") + lootContent; // Concatena il mood con il suo dettaglio
 }
+
+function generateLoot() {
+    const lootChance = Math.random();
+    let loot = "<br><br>Se sconfitti il loot è: ";
+    if (lootChance < 0.1) {
+        const gilAmount = (Math.floor(Math.random() * 10) + 3) * 100;
+        loot += `tesoro + ${gilAmount} gil`;
+    } else if (lootChance < 0.4) {
+        const gilAmount = (Math.floor(Math.random() * 4) + 2) * 100;
+        loot += `${gilAmount} gil`;
+    } else {
+        const gilAmount = (Math.floor(Math.random() * 6) + 1) * 100;
+        loot += `${gilAmount} gil`;
+    }
+    return loot;
+}
+
 // Funzione per ottenere il dettaglio specifico basato sul mood
 async function getMoodDetail(mood) {
     const details = {
@@ -446,21 +465,6 @@ async function rollForBiome(biome) {
             incontriText = await fetchFromSheet('Incontri!A1:A271');
             const encounterOutcome = await handleEncounter();
             encounterContent += `Incontrate: ${incontriText}<br><br>Tipo di incontro: ${encounterOutcome}`;
-            if (encounterOutcome.includes("Ostile")) {
-                encounterContent += `<br><br>Se sconfitti il loot è: `;
-                const lootChance = Math.random();
-                if (lootChance < 0.1) {
-                    const gilAmount = (Math.floor(Math.random() * 10) + 3) * 100;
-                    encounterContent += `tesoro + ${gilAmount} gil`;
-                } else if (lootChance < 0.4) {
-                    const gilAmount = (Math.floor(Math.random() * 4) + 2) * 100;
-                    encounterContent += `${gilAmount} gil`;
-                } else {
-                    const gilAmount = (Math.floor(Math.random() * 6) + 1) * 100;
-                    encounterContent += `${gilAmount} gil`;
-                }
-            }
-            // Nota che ho rimosso il break; qui per evitare l'errore
             break;
         case 5:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
