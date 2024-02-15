@@ -329,30 +329,33 @@ async function getSpecialElement() {
 }
 async function getEncounter(isExit = false) {
     let encounterContent = "";
-    if (isExit || Math.random() < 0.15) { // 100% chance for exit room, 30% for others
+    console.log('Inizio della funzione getEncounter'); // Aggiunto per debug
+    if (isExit || Math.random() < 0.15) {
         const encounterDescription = await fetchFromSheet('Incontri!A1:A271');
-        const encounterOutcome = await handleEncounter(); // Existing function to determine the encounter type
+        const encounterOutcome = await handleEncounter();
+        console.log(`EncounterOutcome: ${encounterOutcome}`); // Aggiunto per vedere l'outcome dell'incontro
         encounterContent += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
-     if (encounterOutcome.includes("Ostile")) {
+        if (encounterOutcome.includes("Ostile")) {
             encounterContent += `<br><br>Se sconfitti il loot è: `;
             const lootChance = Math.random();
+            console.log(`LootChance: ${lootChance}`); // Per vedere il valore di lootChance
             if (lootChance < 0.1) {
-                // 10% tesoro + 1d10+2 x 100 gil
                 const gilAmount = (Math.floor(Math.random() * 10) + 3) * 100;
                 encounterContent += `tesoro + ${gilAmount} gil`;
             } else if (lootChance < 0.4) {
-                // 30% 1d4+1 x 100 Gil
                 const gilAmount = (Math.floor(Math.random() * 4) + 2) * 100;
                 encounterContent += `${gilAmount} gil`;
             } else {
-                // 60% 1d6 x 100 Gil
                 const gilAmount = (Math.floor(Math.random() * 6) + 1) * 100;
                 encounterContent += `${gilAmount} gil`;
             }
         }
     }
-    return encounterContent; // Return the encounter content
+    console.log(`EncounterContent finale: ${encounterContent}`); // Mostra il contenuto finale dell'incontro
+    return encounterContent;
 }
+
+
 async function fetchFromSheet(range) {
     const sheetId = '1BxbPEDPJcalOtcWTEYLenB9xCYMqm61xyL8OTQrs2rY';
     const apiKey = 'AIzaSyDw8x-foQghu9M_dwREfKMfmc1XsVMlbF0';
