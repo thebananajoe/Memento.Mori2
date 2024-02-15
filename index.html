@@ -5,24 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scelta dell'Ambiente</title>
     <style>
-
 .app-title {
     text-align: center;
     padding-top: 20px;
 }
-
 .app-title h1 {
     margin: 0;
     font-size: 24px; /* Aumenta o diminuisci a seconda delle esigenze */
     color: #333; /* Cambia il colore se necessario */
 }
-
 .app-title p {
     margin: 0;
     font-size: 14px; /* Aumenta o diminuisci a seconda delle esigenze */
     color: #666; /* Cambia il colore se necessario */
 }
 
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-image: url('https://i.imgur.com/8om1zpG.png'); /* Inserisci qui l'URL dell'immagine di sfondo */
+  background-size: cover; /* Assicura che l'immagine copra interamente il background */
+  background-position: center; /* Centra l'immagine */
+  background-repeat: no-repeat; /* Impedisce la ripetizione dell'immagine */
+  font-family: Arial, sans-serif;
+  display: block; /* Cambio da flex a block per gestire meglio la posizione degli elementi */
+}
 
   body, html {
     height: 100%;
@@ -44,12 +52,10 @@
     transition: 0.4s;
     background-color: #eee; /* Colore di sfondo per l'intestazione compressa */
   }
-
   /* Stile per l'intestazione della stanza quando è espansa */
   .active, .room-header:hover {
     background-color: #ccc; /* Colore di sfondo per l'intestazione espansa */
   }
-
   /* Stile per il contenuto della stanza */
   .room-content {
     padding: 0 18px;
@@ -58,7 +64,6 @@
     transition: max-height 0.2s ease-out;
     background-color: #f9f9f9;
   }
-
  #travel-options {
     display: flex;
     flex-direction: row;
@@ -79,26 +84,21 @@
     padding: 10px; /* Adjusts padding inside the menu for spacing */
     margin-bottom: 20px; /* Ensures there's space between this menu and any content below */
 }
-
 .button-green {
     padding: 2px 2px;
     font-size: 8px;
     margin: 0 1px;
 }
-
 @media (max-width: 600px) {
     #travel-options {
         justify-content: space-around; /* Distribuisce i pulsanti uniformemente */
     }
-
     .button-green {
         padding: 2px 5px; /* Aumenta leggermente il padding per una migliore manipolabilità */
         font-size: 10px; /* Aumenta la dimensione del font per migliorare la leggibilità */
         margin: 2px; /* Aumenta lo spazio tra i pulsanti per evitare pressioni accidentali */
     }
 }
-
-
   .menu-container {
     position: fixed; /* Posizionamento fisso */
     bottom: 10px; /* Posizionato in basso */
@@ -107,6 +107,21 @@
     display: flex;
     gap: 10px; /* Spazio tra i bottoni */
   }
+
+.content-display, .container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; /* Imposta la larghezza dell'immagine */
+  height: 600px; /* Imposta l'altezza dell'immagine */
+  background-image: url('https://i.imgur.com/rV35pP3.png');
+  background-size: contain; /* Mantiene le proporzioni dell'immagine */
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: auto; /* Aggiunto per permettere lo scroll se il contenuto supera la dimensione dell'immagine */
+}
+
 
   .content-display, .container {
     position: absolute; /* Centratura assoluta */
@@ -132,25 +147,19 @@
     }
   }
 </style>
-
-
 </head>
 <body>
-
 <!-- Menu principale con pulsanti fissi in basso -->
 <div class="app-title">
     <h1>GAME MASTER COMPANION</h1>
     <p>By Banana Joe Inc.</p>
 </div>
-
-
 <div class="menu-container">
     <div class="button" onclick="setEnvironment('Urban')">Urban</div>
     <div class="button" onclick="setEnvironment('Wilderness')">Wilderness</div>
     <div class="button" onclick="generateDungeon()">Dungeon</div>
     <div class="button" onclick="toggleTravelOptions()">Travel</div>
 </div>
-
 <!-- Opzioni di viaggio, che appare sopra il menu principale quando attivato -->
 <div id="travel-options" style="display: none;">
   <div class="button button-green" onclick="setEnvironment('Foresta')">Foresta</div>
@@ -162,7 +171,6 @@
   <div class="button button-green" onclick="setEnvironment('Acquatico')">Acquatico</div>
   <div class="button button-green" onclick="setEnvironment('Giungla')">Giungla</div>
 </div>
-
 <!-- Contenitore per i contenuti generati dai pulsanti, posizionato al centro -->
 <div class="content-display">
     <div id="dungeon-loading" style="display: none;">
@@ -172,78 +180,12 @@
     <div id="encounter-nature" class="box" style="display: none;">Natura dell'incontro...</div>
     <div id="dungeon-container"></div>
 </div>
-
 <script>
-
-const mapImages = [
-  "https://i.imgur.com/pfUKdP2.png"
-"https://i.imgur.com/DvTZeB7.png"
-"https://i.imgur.com/4GJ5Fg9.png"
-"https://i.imgur.com/A2qn2Ua.png"
-"https://i.imgur.com/rF0ZKWQ.png"
-"https://i.imgur.com/khFAOcH.png"
-"https://i.imgur.com/hdmcqFg.png"
-"https://i.imgur.com/JLcmzfT.png"
-"https://i.imgur.com/Rig3cWz.png"
-"https://i.imgur.com/96GlHfm.png"
-"https://i.imgur.com/bSnttE6.png"
-"https://i.imgur.com/9QjkILz.png"
-"https://i.imgur.com/2daD41g.png"
-"https://i.imgur.com/N1ul9FX.png"
-"https://i.imgur.com/r13uVMh.png"
-"https://i.imgur.com/QdOH2EL.png"
-"https://i.imgur.com/iNJ8RHH.png"
-"https://i.imgur.com/u8tfoAx.png"
-"https://i.imgur.com/XUf0B74.png"
-"https://i.imgur.com/UA3jpBs.png"
-"https://i.imgur.com/PcJCwRa.png"
-"https://i.imgur.com/dUrjXod.png"
-"https://i.imgur.com/SrcEQXN.png"
-"https://i.imgur.com/ijcEoH9.png"
-"https://i.imgur.com/c09Q0Q2.png"
-"https://i.imgur.com/qbKE9Dq.png"
-"https://i.imgur.com/CdRLfLO.png"
-"https://i.imgur.com/saSf835.png"
-"https://i.imgur.com/8CFrXK3.png"
-"https://i.imgur.com/3dkDD5K.png"
-"https://i.imgur.com/undO4d9.png"
-"https://i.imgur.com/5mUXIUH.png"
-"https://i.imgur.com/l0BkPsW.png"
-"https://i.imgur.com/S3iRuiy.png"
-"https://i.imgur.com/ftw2GvP.png"
-"https://i.imgur.com/Tqwryv1.png"
-"https://i.imgur.com/XvNNzU8.png"
-"https://i.imgur.com/yxDaqCF.png"
-"https://i.imgur.com/gXjvSwS.png"
-"https://i.imgur.com/IgyahNR.png"
-"https://i.imgur.com/X8h1R7c.png"
-"https://i.imgur.com/dLuI0Cv.png"
-"https://i.imgur.com/mwf1flP.png"
-"https://i.imgur.com/WZn8vlm.png"
-"https://i.imgur.com/GR0FUSW.png"
-"https://i.imgur.com/TGs1xGl.png"
-"https://i.imgur.com/FI91rGh.png"
-"https://i.imgur.com/yGiq1uW.png"
-"https://i.imgur.com/4dSWN5Q.png"
-"https://i.imgur.com/DzRwH99.png",
-  // Aggiungi tutti gli altri URL delle tue immagini qui
-];
-
-function showMap() {
-  const randomIndex = Math.floor(Math.random() * mapImages.length);
-  const selectedImage = mapImages[randomIndex];
-  const displayContainer = document.getElementById('outcome'); // O l'ID del contenitore dove vuoi mostrare l'immagine
-  displayContainer.innerHTML = `<img src="${selectedImage}" alt="Random Map" style="width:100%; max-height:100%;">`; // Adatta lo stile secondo le tue necessità
-  displayContainer.style.display = 'block';
-}
-
-
 function toggleTravelOptions() {
     var travelOptions = document.getElementById("travel-options");
     // Alterna la visibilità delle opzioni di viaggio.
     travelOptions.style.display = travelOptions.style.display === "none" ? "flex" : "none";
 }
-
 // Chiamata a questa funzione per nascondere le opzioni di viaggio quando necessario.
 function hideTravelOptions() {
     var travelOptions = document.getElementById("travel-options");
@@ -258,10 +200,8 @@ async function generateDungeon() {
     document.getElementById('encounter-nature').style.display = 'none';
     const dungeonContainer = document.getElementById('dungeon-container');
     dungeonContainer.innerHTML = '';
-
     // Genera un numero totale di stanze tra 2 e 4, inclusi ingresso e uscita
     let roomCount = Math.floor(Math.random() * 3) + 2; // Genera da 2 a 4 stanze totali
-
     for (let i = 0; i < roomCount; i++) {
         console.log(`Generazione stanza ${i + 1} di ${roomCount}`);
         let roomName = i === 0 ? "Ingresso" : i === roomCount - 1 ? "Uscita" : `Stanza ${i}`;
@@ -269,13 +209,9 @@ async function generateDungeon() {
         await createDungeonRoom(dungeonContainer, roomName, i, isExit);
         console.log(`Fine generazione stanza ${i + 1}`);
     }
-
     document.getElementById('dungeon-loading').style.display = 'none';
     console.log('Fine generazione dungeon');
 }
-
-
-
 async function createDungeonRoom(container, title, index, isExit) {
     const roomDiv = document.createElement('div');
     const header = document.createElement('button');
@@ -283,11 +219,9 @@ async function createDungeonRoom(container, title, index, isExit) {
     header.innerHTML = title;
     const contentDiv = document.createElement('div');
     contentDiv.classList.add('room-content');
-
     let roomDescription = await getRandomRoomDescription();
     let specialElement = await getSpecialElement(isExit);
     let encounterContent = isExit ? await getEncounter(true) : await getEncounter();
-
     // Initialize the final HTML with room description
     let finalHTML = `${roomDescription}`;
     
@@ -295,40 +229,32 @@ async function createDungeonRoom(container, title, index, isExit) {
     if (specialElement) {
         finalHTML += `<br><br>${specialElement}`;
     }
-
     // Append encounter content if exists, preceded by line breaks
     if (encounterContent) {
         finalHTML += `<br><br>${encounterContent}`;
     }
-
       if (isExit || Math.random() < 0.1) {
         finalHTML += `<br><br>Nella stanza c'è un tesoro`;
     }
-
  contentDiv.innerHTML = finalHTML;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
     container.appendChild(roomDiv);
-
     header.addEventListener("click", function() {
         this.classList.toggle("active");
         var content = this.nextElementSibling;
         content.style.display = content.style.display === "block" ? "none" : "block";
     });
 }
-
 async function getRandomRoomDescription() {
     // Implement logic to fetch random description from column F or G based on the probability
 }
-
 async function getSpecialElement(isExit) {
     // Implement logic to decide and fetch a special element (Trap, Obstacle, Anomaly, Puzzle) if applicable
 }
-
 async function getEncounter(forceEncounter = false) {
     // Implement logic to decide on encounters, especially forcing an encounter if it's the exit room
 }
-
 // Use existing fetchFromSheet, handleEncounter, and any other necessary functions as they are.
 async function getRandomRoomDescription() {
     // Decide which column to use based on the probability
@@ -336,7 +262,6 @@ async function getRandomRoomDescription() {
     const range = `Dungeon!${column}2:${column}40`; // Adjust the range according to your sheet's actual data
     return await fetchFromSheet(range);
 }
-
 async function getSpecialElement() {
     let contentHTML = "";
     if (Math.random() < 0.5) { // 50% chance to include a special element
@@ -365,9 +290,6 @@ async function getSpecialElement() {
     }
     return contentHTML; // Return the HTML content for the special element
 }
-
-
-
 async function getEncounter(isExit = false) {
     let encounterContent = "";
     if (isExit || Math.random() < 0.15) { // 100% chance for exit room, 30% for others
@@ -377,13 +299,10 @@ async function getEncounter(isExit = false) {
     }
     return encounterContent; // Return the encounter content
 }
-
-
 async function fetchFromSheet(range) {
     const sheetId = '1BxbPEDPJcalOtcWTEYLenB9xCYMqm61xyL8OTQrs2rY';
     const apiKey = 'AIzaSyDw8x-foQghu9M_dwREfKMfmc1XsVMlbF0';
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-
     try {
         const response = await fetch(url);
         const data = await response.json();
@@ -398,13 +317,10 @@ async function fetchFromSheet(range) {
         return 'Errore nel caricamento dei dati.';
     }
 }
-
-
 async function handleEncounter() {
     const roll = Math.ceil(Math.random() * 6);
     let mood = "";
     let detail = "";
-
     switch (roll) {
         case 1:
             mood = "Vi Attacca immediatamente.";
@@ -424,10 +340,8 @@ async function handleEncounter() {
             detail = await getMoodDetail(mood); // Ottieni il dettaglio specifico per "Amichevole"
             break;
     }
-
     return mood + (detail ? ": " + detail : ""); // Concatena il mood con il suo dettaglio
 }
-
 // Funzione per ottenere il dettaglio specifico basato sul mood
 async function getMoodDetail(mood) {
     const details = {
@@ -435,21 +349,16 @@ async function getMoodDetail(mood) {
         "Neutrale": ["Osservano con sospetto i PC, pronti a dialogare o ad attaccare in base ai PC.", "Fanno domande ai PC, e se gli piacciono le risposte sono aperti a negoziare.", "Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi.","Valutano i PC e sono disposti a trattare se pensano possano esserci dei vantaggi."],
         "Amichevole": ["Sono disposti a condividere informazioni e assistenza.", "ASono disposti a fornire ai PC cibo, acqua o cure.", "Almeno uno tra loro è disponibile al reclutamento, offrendosi di venire con voi, se l’offerta è giusta.", "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio.", "Offrono supporto ai PC, disposti ad assisterli senza nulla in cambio."]
     };
-
     const moodDetails = details[mood];
     if (!moodDetails) return "Dettaglio non trovato per il mood specificato.";
-
     const roll = Math.floor(Math.random() * moodDetails.length); // Usa la lunghezza dell'array del mood per il calcolo
-
     return moodDetails[roll]; // Seleziona un elemento basato sul nuovo roll
 }
-
 async function rollForBiome(biome) {
     document.getElementById('dungeon-container').innerHTML = '';
     document.getElementById('encounter-nature').style.display = 'none';
     document.getElementById('outcome').style.display = 'none';
     document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
-
     // Mappa i biomi alle rispettive colonne in Google Sheets
     const biomeColumns = {
         "Foresta": "A",
@@ -461,17 +370,13 @@ async function rollForBiome(biome) {
         "Palude": "G",
         "Giungla": "H"
     };
-
     // Determina la colonna da utilizzare basata sul bioma scelto
     const column = biomeColumns[biome] || "A"; // Usa "A" come default se il bioma non è mappato
-
     // Pesca una casella a caso dalla colonna corrispondente
     const biomeText = await fetchFromSheet(`Biome!${column}2:${column}33`);
     let encounterContent = `${biomeText}<br><br>`;
-
     const roll = Math.ceil(Math.random() * 6);
     let incontriText = "";
-
     // Usa lo switch per determinare il contenuto dell'incontro basato sul roll
     switch (roll) {
         case 1:
@@ -494,13 +399,9 @@ async function rollForBiome(biome) {
             encounterContent += "Non succede nulla";
             break;
     }
-
     document.getElementById('outcome').innerHTML = encounterContent;
     document.getElementById('outcome').style.display = 'block';
 }
-
-
-
 async function setEnvironment(choice) {
     hideTravelOptions();
     document.getElementById('dungeon-loading').style.display = 'none';
@@ -508,7 +409,6 @@ async function setEnvironment(choice) {
     document.getElementById('encounter-nature').style.display = 'none';
     document.getElementById('outcome').style.display = 'none';
     document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
-
     if (choice === 'Urban') {
         const urbanText = await fetchFromSheet('Urban!B1:B271');
         const prefixedText = "Appena entrate nel centro abitato notate: " + urbanText;
@@ -521,8 +421,6 @@ async function setEnvironment(choice) {
     }
     document.getElementById('outcome').style.display = 'block';
 }
-
 </script>
-
 </body>
 </html>
