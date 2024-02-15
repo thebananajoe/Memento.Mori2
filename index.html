@@ -463,6 +463,7 @@ async function rollForBiome(biome) {
             const visibilityRoll = Math.random() < 0.5;
             encounterContent += `<br><br>${visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro."}`;
             break;
+        }
         case 5:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
             encounterContent += `Notate delle tracce che conducono ad ${incontriText}`;
