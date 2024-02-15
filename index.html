@@ -335,21 +335,6 @@ async function getEncounter(isExit = false) {
         const encounterOutcome = await handleEncounter();
         console.log(`EncounterOutcome: ${encounterOutcome}`); // Aggiunto per vedere l'outcome dell'incontro
         encounterContent += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
-        if (encounterOutcome.includes("Ostile")) {
-            encounterContent += `<br><br>Se sconfitti il loot è: `;
-            const lootChance = Math.random();
-            console.log(`LootChance: ${lootChance}`); // Per vedere il valore di lootChance
-            if (lootChance < 0.1) {
-                const gilAmount = (Math.floor(Math.random() * 10) + 3) * 100;
-                encounterContent += `tesoro + ${gilAmount} gil`;
-            } else if (lootChance < 0.4) {
-                const gilAmount = (Math.floor(Math.random() * 4) + 2) * 100;
-                encounterContent += `${gilAmount} gil`;
-            } else {
-                const gilAmount = (Math.floor(Math.random() * 6) + 1) * 100;
-                encounterContent += `${gilAmount} gil`;
-            }
-        }
     }
     console.log(`EncounterContent finale: ${encounterContent}`); // Mostra il contenuto finale dell'incontro
     return encounterContent;
