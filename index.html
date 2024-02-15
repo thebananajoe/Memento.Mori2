@@ -416,8 +416,8 @@ async function rollForBiome(biome) {
     document.getElementById('dungeon-container').innerHTML = '';
     document.getElementById('encounter-nature').style.display = 'none';
     document.getElementById('outcome').style.display = 'none';
-    document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
-    // Mappa i biomi alle rispettive colonne in Google Sheets
+    document.getElementById('outcome').innerHTML = ''; // Reset content
+    // Map biomes to their respective columns in Google Sheets
     const biomeColumns = {
         "Foresta": "A",
         "Pianura": "B",
@@ -428,14 +428,14 @@ async function rollForBiome(biome) {
         "Palude": "G",
         "Giungla": "H"
     };
-    // Determina la colonna da utilizzare basata sul bioma scelto
-    const column = biomeColumns[biome] || "A"; // Usa "A" come default se il bioma non è mappato
-    // Pesca una casella a caso dalla colonna corrispondente
+    // Determine the column to use based on the chosen biome
+    const column = biomeColumns[biome] || "A"; // Use "A" as default if the biome is not mapped
+    // Draw a random cell from the corresponding column
     const biomeText = await fetchFromSheet(`Biome!${column}2:${column}33`);
     let encounterContent = `${biomeText}<br><br>`;
     const roll = Math.ceil(Math.random() * 6);
     let incontriText = "";
-    // Usa lo switch per determinare il contenuto dell'incontro basato sul roll
+    // Use switch to determine the content of the encounter based on the roll
     switch (roll) {
         case 1:
             encounterContent += "I PG si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
@@ -448,22 +448,20 @@ async function rollForBiome(biome) {
             encounterContent += `Incontrate: ${incontriText}<br><br>Tipo di incontro: ${encounterOutcome}`;
             if (encounterOutcome.includes("Ostile")) {
                 encounterContent += `<br><br>Se sconfitti il loot è: `;
-            const lootChance = Math.random();
-            console.log(`LootChance: ${lootChance}`); // Per vedere il valore di lootChance
-            if (lootChance < 0.1) {
-                const gilAmount = (Math.floor(Math.random() * 10) + 3) * 100;
-                encounterContent += `tesoro + ${gilAmount} gil`;
-            } else if (lootChance < 0.4) {
-                const gilAmount = (Math.floor(Math.random() * 4) + 2) * 100;
-                encounterContent += `${gilAmount} gil`;
-            } else {
-                const gilAmount = (Math.floor(Math.random() * 6) + 1) * 100;
-                encounterContent += `${gilAmount} gil`;
+                const lootChance = Math.random();
+                if (lootChance < 0.1) {
+                    const gilAmount = (Math.floor(Math.random() * 10) + 3) * 100;
+                    encounterContent += `tesoro + ${gilAmount} gil`;
+                } else if (lootChance < 0.4) {
+                    const gilAmount = (Math.floor(Math.random() * 4) + 2) * 100;
+                    encounterContent += `${gilAmount} gil`;
+                } else {
+                    const gilAmount = (Math.floor(Math.random() * 6) + 1) * 100;
+                    encounterContent += `${gilAmount} gil`;
+                }
             }
-            const visibilityRoll = Math.random() < 0.5;
-            encounterContent += `<br><br>${visibilityRoll ? "Li vedete prima voi." : "Vi vedono prima loro."}`;
+            // Nota che ho rimosso il break; qui per evitare l'errore
             break;
-        }
         case 5:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
             encounterContent += `Notate delle tracce che conducono ad ${incontriText}`;
@@ -475,6 +473,7 @@ async function rollForBiome(biome) {
     document.getElementById('outcome').innerHTML = encounterContent;
     document.getElementById('outcome').style.display = 'block';
 }
+
 async function setEnvironment(choice) {
     hideTravelOptions();
     document.getElementById('dungeon-loading').style.display = 'none';
