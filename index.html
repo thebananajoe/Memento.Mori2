@@ -175,6 +175,69 @@
 
 <script>
 
+const mapImages = [
+  "https://i.imgur.com/pfUKdP2.png"
+"https://i.imgur.com/DvTZeB7.png"
+"https://i.imgur.com/4GJ5Fg9.png"
+"https://i.imgur.com/A2qn2Ua.png"
+"https://i.imgur.com/rF0ZKWQ.png"
+"https://i.imgur.com/khFAOcH.png"
+"https://i.imgur.com/hdmcqFg.png"
+"https://i.imgur.com/JLcmzfT.png"
+"https://i.imgur.com/Rig3cWz.png"
+"https://i.imgur.com/96GlHfm.png"
+"https://i.imgur.com/bSnttE6.png"
+"https://i.imgur.com/9QjkILz.png"
+"https://i.imgur.com/2daD41g.png"
+"https://i.imgur.com/N1ul9FX.png"
+"https://i.imgur.com/r13uVMh.png"
+"https://i.imgur.com/QdOH2EL.png"
+"https://i.imgur.com/iNJ8RHH.png"
+"https://i.imgur.com/u8tfoAx.png"
+"https://i.imgur.com/XUf0B74.png"
+"https://i.imgur.com/UA3jpBs.png"
+"https://i.imgur.com/PcJCwRa.png"
+"https://i.imgur.com/dUrjXod.png"
+"https://i.imgur.com/SrcEQXN.png"
+"https://i.imgur.com/ijcEoH9.png"
+"https://i.imgur.com/c09Q0Q2.png"
+"https://i.imgur.com/qbKE9Dq.png"
+"https://i.imgur.com/CdRLfLO.png"
+"https://i.imgur.com/saSf835.png"
+"https://i.imgur.com/8CFrXK3.png"
+"https://i.imgur.com/3dkDD5K.png"
+"https://i.imgur.com/undO4d9.png"
+"https://i.imgur.com/5mUXIUH.png"
+"https://i.imgur.com/l0BkPsW.png"
+"https://i.imgur.com/S3iRuiy.png"
+"https://i.imgur.com/ftw2GvP.png"
+"https://i.imgur.com/Tqwryv1.png"
+"https://i.imgur.com/XvNNzU8.png"
+"https://i.imgur.com/yxDaqCF.png"
+"https://i.imgur.com/gXjvSwS.png"
+"https://i.imgur.com/IgyahNR.png"
+"https://i.imgur.com/X8h1R7c.png"
+"https://i.imgur.com/dLuI0Cv.png"
+"https://i.imgur.com/mwf1flP.png"
+"https://i.imgur.com/WZn8vlm.png"
+"https://i.imgur.com/GR0FUSW.png"
+"https://i.imgur.com/TGs1xGl.png"
+"https://i.imgur.com/FI91rGh.png"
+"https://i.imgur.com/yGiq1uW.png"
+"https://i.imgur.com/4dSWN5Q.png"
+"https://i.imgur.com/DzRwH99.png",
+  // Aggiungi tutti gli altri URL delle tue immagini qui
+];
+
+function showMap() {
+  const randomIndex = Math.floor(Math.random() * mapImages.length);
+  const selectedImage = mapImages[randomIndex];
+  const displayContainer = document.getElementById('outcome'); // O l'ID del contenitore dove vuoi mostrare l'immagine
+  displayContainer.innerHTML = `<img src="${selectedImage}" alt="Random Map" style="width:100%; max-height:100%;">`; // Adatta lo stile secondo le tue necessità
+  displayContainer.style.display = 'block';
+}
+
+
 function toggleTravelOptions() {
     var travelOptions = document.getElementById("travel-options");
     // Alterna la visibilità delle opzioni di viaggio.
