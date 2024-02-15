@@ -333,6 +333,23 @@ async function getEncounter(isExit = false) {
         const encounterDescription = await fetchFromSheet('Incontri!A1:A271');
         const encounterOutcome = await handleEncounter(); // Existing function to determine the encounter type
         encounterContent += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
+     if (encounterOutcome.includes("Ostile")) {
+            encounterContent += `<br><br>Se sconfitti il loot è: `;
+            const lootChance = Math.random();
+            if (lootChance < 0.1) {
+                // 10% tesoro + 1d10+2 x 100 gil
+                const gilAmount = (Math.floor(Math.random() * 10) + 3) * 100;
+                encounterContent += `tesoro + ${gilAmount} gil`;
+            } else if (lootChance < 0.4) {
+                // 30% 1d4+1 x 100 Gil
+                const gilAmount = (Math.floor(Math.random() * 4) + 2) * 100;
+                encounterContent += `${gilAmount} gil`;
+            } else {
+                // 60% 1d6 x 100 Gil
+                const gilAmount = (Math.floor(Math.random() * 6) + 1) * 100;
+                encounterContent += `${gilAmount} gil`;
+            }
+        }
     }
     return encounterContent; // Return the encounter content
 }
