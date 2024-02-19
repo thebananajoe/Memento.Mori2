@@ -371,7 +371,7 @@ async function handleEncounter() {
             break;
         case 2:
         case 3:
-            mood = "Ostile";
+            mood = `<strong style="color: red;">Ostile</strong>`;
             detail = await getMoodDetail(mood); // Ottieni il dettaglio specifico per "Ostile"
             lootContent = generateLoot(); // Assumi che generateLoot() sia una funzione che restituisce la stringa del loot
             break;
