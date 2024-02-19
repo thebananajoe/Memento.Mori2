@@ -447,9 +447,11 @@ async function rollForBiome(biome) {
     // Use switch to determine the content of the encounter based on the roll
     switch (roll) {
         case 1:
-            encounterContent += "I PG si perdono! L'Azione è sprecata O si muovono in un esagono diverso.";
+            encounterContent += "I PG si perdono, scegli un altro Bioma.";
             break;
         case 2:
+            encounterContent += "I PG si perdono e rimangono nello stesso esagono.";
+            break;
         case 3:
         case 4:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
@@ -458,7 +460,7 @@ async function rollForBiome(biome) {
             break;
         case 5:
             incontriText = await fetchFromSheet('Incontri!A1:A271');
-            encounterContent += `Notate delle tracce che conducono ad ${incontriText}`;
+            encounterContent += `**Notate delle tracce che conducono...** ${incontriText}`;
             break;
         case 6:
             encounterContent += "Non succede nulla";
