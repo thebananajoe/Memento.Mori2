@@ -350,8 +350,9 @@ async function fetchFromSheet(range) {
         const data = await response.json();
         if (data.values && data.values.length > 0) {
             const randomIndex = Math.floor(Math.random() * data.values.length);
-            return data.values[randomIndex][0];
-        } else {
+            const highlightedText = highlightKeywords(data.values[randomIndex][0]);
+            return highlightedText;
+         } else {
             return 'Nessun dato trovato nella colonna specificata.';
         }
     } catch(error) {
@@ -359,6 +360,17 @@ async function fetchFromSheet(range) {
         return 'Errore nel caricamento dei dati.';
     }
 }
+
+function highlightKeywords(text) {
+    // Utilizza una Regular Expression per identificare parole che iniziano con "BB"
+    const regex = /\bBB(\w+)/g;
+    // Sostituisce ogni occorrenza trovata con la parola (senza BB) in grassetto
+    return text.replace(regex, function(match, p1) {
+        return `<strong>${p1}</strong>`;
+    });
+}
+
+
 async function handleEncounter() {
     const roll = Math.ceil(Math.random() * 6);
     let mood = "";
