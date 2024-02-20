@@ -331,7 +331,7 @@ async function getEncounter(isExit = false) {
     let encounterContent = "";
     console.log('Inizio della funzione getEncounter'); // Aggiunto per debug
     if (isExit || Math.random() < 0.15) {
-        const encounterDescription = await fetchFromSheet('Incontri!A1:A271');
+        const encounterDescription = await fetchFromSheet('Incontri!A1:A592');
         const encounterOutcome = await handleEncounter();
         console.log(`EncounterOutcome: ${encounterOutcome}`); // Aggiunto per vedere l'outcome dell'incontro
         encounterContent += `Incontro: ${encounterDescription}<br><br>Tipo di incontro: ${encounterOutcome}`;
@@ -470,12 +470,12 @@ async function rollForBiome(biome) {
             break;
         case 3:
         case 4:
-            incontriText = await fetchFromSheet('Incontri!A1:A271');
+            incontriText = await fetchFromSheet('Incontri!A1:A592');
             const encounterOutcome = await handleEncounter();
             encounterContent += `Incontrate: ${incontriText}<br><br>Tipo di incontro: ${encounterOutcome}`;
             break;
         case 5:
-            incontriText = await fetchFromSheet('Incontri!A1:A271');
+            incontriText = await fetchFromSheet('Incontri!A1:A592');
             encounterContent += `**Notate delle tracce che conducono...** ${incontriText}`;
             break;
         case 6:
@@ -494,7 +494,7 @@ async function setEnvironment(choice) {
     document.getElementById('outcome').style.display = 'none';
     document.getElementById('outcome').innerHTML = ''; // Resetta il contenuto
     if (choice === 'Urban') {
-        const urbanText = await fetchFromSheet('Urban!B1:B271');
+        const urbanText = await fetchFromSheet('Urban!B1:B57');
         const prefixedText = "Appena entrate nel centro abitato notate: " + urbanText;
         document.getElementById('outcome').textContent = prefixedText;
     } else if (choice === 'Dungeon') {
