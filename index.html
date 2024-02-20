@@ -472,11 +472,11 @@ async function rollForBiome(biome) {
         case 4:
             incontriText = await fetchFromSheet('Incontri!A1:A932');
             const encounterOutcome = await handleEncounter();
-            encounterContent += `Incontrate: ${incontriText}<br><br>Tipo di incontro: ${encounterOutcome}`;
+            encounterContent += `Incontrate ${incontriText}<br><br>Tipo di incontro: ${encounterOutcome}`;
             break;
         case 5:
             incontriText = await fetchFromSheet('Incontri!A1:A932');
-            encounterContent += `**Notate delle tracce che conducono...** ${incontriText}`;
+            encounterContent += `<strong>Notate delle tracce che conducono a</strong> ${incontriText}`;
             break;
         case 6:
             encounterContent += "Non succede nulla";
