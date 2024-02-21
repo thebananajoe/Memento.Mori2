@@ -228,9 +228,9 @@ function showMap() {
 }
 
 function addPatrolInfo(parentElement) {
-  const facileNumbers = generateRandomNumbers(2, 8, 19);
-  const medioNumbers = generateRandomNumbers(4, 8, 19);
-  const difficileNumbers = generateRandomNumbers(6, 8, 19);
+  const facileNumbers = generateUniqueSortedNumbers(2, 8, 19);
+  const medioNumbers = generateUniqueSortedNumbers(4, 8, 19);
+  const difficileNumbers = generateUniqueSortedNumbers(6, 8, 19);
 
   const patrolText = `Pattuglia: Facile: ${facileNumbers.join(", ")} | Medio: ${medioNumbers.join(", ")} | Difficile: ${difficileNumbers.join(", ")}`;
   
@@ -242,12 +242,15 @@ function addPatrolInfo(parentElement) {
   parentElement.appendChild(patrolElement);
 }
 
-function generateRandomNumbers(count, min, max) {
-  const numbers = [];
-  for (let i = 0; i < count; i++) {
-    numbers.push(Math.floor(Math.random() * (max - min + 1)) + min);
+function generateUniqueSortedNumbers(count, min, max) {
+  const numbers = new Set();
+  // Continua a generare numeri finché l'insieme non raggiunge la dimensione desiderata
+  while (numbers.size < count) {
+    const num = Math.floor(Math.random() * (max - min + 1)) + min;
+    numbers.add(num);
   }
-  return numbers;
+  // Converte l'insieme in un array e lo ordina
+  return Array.from(numbers).sort((a, b) => a - b);
 }
 
 function toggleTravelOptions() {
