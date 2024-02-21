@@ -224,8 +224,31 @@ function showMap() {
   `;
   displayContainer.innerHTML += additionalText; // Concatena le frasi all'HTML esistente
   displayContainer.style.display = 'block';
+  addPatrolInfo(displayContainer);
 }
 
+function addPatrolInfo(parentElement) {
+  const facileNumbers = generateRandomNumbers(2, 8, 19);
+  const medioNumbers = generateRandomNumbers(4, 8, 19);
+  const difficileNumbers = generateRandomNumbers(6, 8, 19);
+
+  const patrolText = `Pattuglia: Facile: ${facileNumbers.join(", ")} | Medio: ${medioNumbers.join(", ")} | Difficile: ${difficileNumbers.join(", ")}`;
+  
+  // Crea un elemento p e aggiungi il testo della pattuglia
+  const patrolElement = document.createElement("p");
+  patrolElement.innerHTML = patrolText;
+  
+  // Aggiungi l'elemento sotto l'immagine della mappa nel container outcome
+  parentElement.appendChild(patrolElement);
+}
+
+function generateRandomNumbers(count, min, max) {
+  const numbers = [];
+  for (let i = 0; i < count; i++) {
+    numbers.push(Math.floor(Math.random() * (max - min + 1)) + min);
+  }
+  return numbers;
+}
 
 function toggleTravelOptions() {
     var travelOptions = document.getElementById("travel-options");
