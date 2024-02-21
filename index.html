@@ -210,7 +210,7 @@ const mapImages = [
 "https://i.imgur.com/DzRwH99.png"
 ];
 
-function showMap() {
+async function showMap() {
   const randomIndex = Math.floor(Math.random() * mapImages.length);
   const selectedImage = mapImages[randomIndex];
   const displayContainer = document.getElementById('outcome'); // O l'ID del contenitore dove vuoi mostrare l'immagine
