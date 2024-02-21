@@ -250,21 +250,6 @@ function generateUniqueRandomNumbers(count, min, max) {
     return [...numbers];
 }
 
-// Funzione per ottenere tre rumors unici dal foglio Google
-async function getUniqueRumors() {
-  // Ottiene un insieme più grande di rumors possibili
-  const possibleRumors = await fetchFromSheet('Rumors!A2:A40');
-  
-  // Seleziona tre rumors unici dall'array
-  let uniqueIndexes = new Set();
-  while(uniqueIndexes.size < 3) {
-    uniqueIndexes.add(Math.floor(Math.random() * possibleRumors.length));
-  }
-
-  // Restituisce i rumors corrispondenti agli indici unici
-  return [...uniqueIndexes].map(index => possibleRumors[index]);
-}
-
 function addPatrolInfo(parentElement) {
   const facileNumbers = generateUniqueSortedNumbers(2, 8, 19);
   const medioNumbers = generateUniqueSortedNumbers(4, 8, 19);
