@@ -233,10 +233,13 @@ async function addRumors(parentElement) {
         rumors.push(rumor);
     }
 
+    const colors = ["green", Math.random() < 0.5 ? "red" : "green", "red"];
+
     // Aggiungi ogni rumor al parentElement
     rumors.forEach((rumor, i) => {
         let rumorElement = document.createElement("p");
         rumorElement.innerHTML = `Rumor ${i + 1}: ${rumor}`;
+         rumorElement.style.color = colors[i]; // Assegna il colore
         parentElement.appendChild(rumorElement);
     });
 }
