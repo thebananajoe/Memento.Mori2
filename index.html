@@ -216,6 +216,51 @@ function showMap() {
   const displayContainer = document.getElementById('outcome'); // O l'ID del contenitore dove vuoi mostrare l'immagine
   displayContainer.innerHTML = `<img src="${selectedImage}" alt="Random Map" style="width:100%; max-height:100%;">`; // Adatta lo stile secondo le tue necessità
   displayContainer.style.display = 'block';
+   generateImmaculatePatrols();
+  generateRumors();
+}
+
+function generateImmaculatePatrols() {
+  // Generate patrols numbers for each difficulty
+  const patrols = {
+    facile: generateNumbers(2, 8, 19),
+    medio: generateNumbers(4, 8, 19),
+    difficile: generateNumbers(6, 8, 19)
+  };
+  const patrolContent = `Pattuglie Immacolate<br>Facile: ${patrols.facile.join(", ")} | Medio: ${patrols.medio.join(", ")} | Difficile: ${patrols.difficile.join(", ")}`;
+  
+  // Display the patrols in a new box under the map
+  const patrolBox = document.createElement("div");
+  patrolBox.innerHTML = patrolContent;
+  document.body.appendChild(patrolBox); // Adjust as needed to insert in the correct place
+}
+
+function generateNumbers(count, min, max) {
+  const numbers = [];
+  for (let i = 0; i < count; i++) {
+    numbers.push(Math.floor(Math.random() * (max - min + 1)) + min);
+  }
+  return numbers;
+}
+
+// Function to fetch and display rumors from Google Sheets
+async function generateRumors() {
+  // Assuming you have a function fetchFromSheet that fetches data from Google Sheets
+  const rumors = [
+    await fetchFromSheet('Rumors!A1'),
+    await fetchFromSheet('Rumors!A2'),
+    await fetchFromSheet('Rumors!A3')
+  ];
+
+  // Determine truthfulness for each rumor
+  const truthfulness = ["Vero", "Finto", Math.random() < 0.5 ? "Vero" : "Finto"];
+
+  // Display rumors and their truthfulness
+  const rumorsBox = document.createElement("div");
+  rumors.forEach((rumor, index) => {
+    rumorsBox.innerHTML += `${truthfulness[index]} | ${rumor}<br>`;
+  });
+  document.body.appendChild(rumorsBox); // Adjust as needed
 }
 
 function toggleTravelOptions() {
