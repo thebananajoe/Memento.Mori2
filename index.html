@@ -216,18 +216,38 @@ async function showMap() {
   const displayContainer = document.getElementById('outcome'); // O l'ID del contenitore dove vuoi mostrare l'immagine
   displayContainer.innerHTML = `<img src="${selectedImage}" alt="Random Map" style="width:100%; max-height:100%;">`; // 
   displayContainer.style.display = 'block';
-  await addUniqueRumors(displayContainer);
+  await addRumors(displayContainer);
   addPatrolInfo(displayContainer);
 }
 
-// Funzione per ottenere e aggiungere rumors unici
-async function addUniqueRumors(parentElement) {
-  const uniqueRumors = await getUniqueRumors();
-  uniqueRumors.forEach(rumor => {
-    const rumorElement = document.createElement("p");
-    rumorElement.innerHTML = rumor;
-    parentElement.appendChild(rumorElement);
-  });
+async function addRumors(parentElement) {
+    // Assicurati che questa funzione sia marcata come async
+
+    // Genera indici unici per selezionare rumors diversi
+    let indexes = generateUniqueRandomNumbers(3, 1, 100); // Assumendo che tu abbia 100 rumors
+    let rumors = [];
+
+    for (let index of indexes) {
+        let range = `Rumors!A${index}:A${index}`;
+        let rumor = await fetchFromSheet(range);
+        rumors.push(rumor);
+    }
+
+    // Aggiungi ogni rumor al parentElement
+    rumors.forEach((rumor, i) => {
+        let rumorElement = document.createElement("p");
+        rumorElement.innerHTML = `Rumor ${i + 1}: ${rumor}`;
+        parentElement.appendChild(rumorElement);
+    });
+}
+
+function generateUniqueRandomNumbers(count, min, max) {
+    let numbers = new Set();
+    while(numbers.size < count) {
+        let number = Math.floor(Math.random() * (max - min + 1)) + min;
+        numbers.add(number);
+    }
+    return [...numbers];
 }
 
 // Funzione per ottenere tre rumors unici dal foglio Google
