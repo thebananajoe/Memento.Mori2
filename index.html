@@ -214,20 +214,35 @@ async function showMap() {
   const randomIndex = Math.floor(Math.random() * mapImages.length);
   const selectedImage = mapImages[randomIndex];
   const displayContainer = document.getElementById('outcome'); // O l'ID del contenitore dove vuoi mostrare l'immagine
-  displayContainer.innerHTML = `<img src="${selectedImage}" alt="Random Map" style="width:100%; max-height:100%;">`; // Adatta lo stile secondo le tue necessità
-    // Aggiunge le frasi richieste sotto l'immagine
-const rumorRanges = ['Rumors!A1', 'Rumors!A2', 'Rumors!A3']; // Example ranges, adjust based on actual sheet data
-  const rumors = await Promise.all(rumorRanges.map(range => fetchFromSheet(range)));
-
-  // Create a paragraph for each rumor and append it to the display container
-  rumors.forEach((rumor, index) => {
-    const rumorElement = document.createElement("p");
-    rumorElement.innerHTML = `Rumor ${index + 1}: ${rumor}`;
-    displayContainer.appendChild(rumorElement);
-  });
-
+  displayContainer.innerHTML = `<img src="${selectedImage}" alt="Random Map" style="width:100%; max-height:100%;">`; // 
   displayContainer.style.display = 'block';
+  await addUniqueRumors(displayContainer);
   addPatrolInfo(displayContainer);
+}
+
+// Funzione per ottenere e aggiungere rumors unici
+async function addUniqueRumors(parentElement) {
+  const uniqueRumors = await getUniqueRumors();
+  uniqueRumors.forEach(rumor => {
+    const rumorElement = document.createElement("p");
+    rumorElement.innerHTML = rumor;
+    parentElement.appendChild(rumorElement);
+  });
+}
+
+// Funzione per ottenere tre rumors unici dal foglio Google
+async function getUniqueRumors() {
+  // Ottiene un insieme più grande di rumors possibili
+  const possibleRumors = await fetchFromSheet('Rumors!A2:A40');
+  
+  // Seleziona tre rumors unici dall'array
+  let uniqueIndexes = new Set();
+  while(uniqueIndexes.size < 3) {
+    uniqueIndexes.add(Math.floor(Math.random() * possibleRumors.length));
+  }
+
+  // Restituisce i rumors corrispondenti agli indici unici
+  return [...uniqueIndexes].map(index => possibleRumors[index]);
 }
 
 function addPatrolInfo(parentElement) {
