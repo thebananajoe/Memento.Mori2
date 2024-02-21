@@ -215,6 +215,14 @@ function showMap() {
   const selectedImage = mapImages[randomIndex];
   const displayContainer = document.getElementById('outcome'); // O l'ID del contenitore dove vuoi mostrare l'immagine
   displayContainer.innerHTML = `<img src="${selectedImage}" alt="Random Map" style="width:100%; max-height:100%;">`; // Adatta lo stile secondo le tue necessità
+    // Aggiunge le frasi richieste sotto l'immagine
+  const additionalText = `
+    <p>Pattuglia</p>
+    <p>Rumor 1</p>
+    <p>Rumor 2</p>
+    <p>Rumor 3</p>
+  `;
+  displayContainer.innerHTML += additionalText; // Concatena le frasi all'HTML esistente
   displayContainer.style.display = 'block';
 }
 
