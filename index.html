@@ -227,6 +227,8 @@ async function addRumors(parentElement) {
     let indexes = generateUniqueRandomNumbers(3, 1, 41); // Assumendo che tu abbia 100 rumors
     let rumors = [];
 
+    let rumorNumbers = generateUniqueRandomNumbers(3, 8, 19);
+
     for (let index of indexes) {
         let range = `Rumors!A${index}:A${index}`;
         let rumor = await fetchFromSheet(range);
@@ -238,7 +240,7 @@ async function addRumors(parentElement) {
     // Aggiungi ogni rumor al parentElement
     rumors.forEach((rumor, i) => {
         let rumorElement = document.createElement("p");
-        rumorElement.innerHTML = `Rumor ${i + 1}: ${rumor}`;
+        rumorElement.innerHTML = `Rumor ${i + 1} (${rumorNumbers[i]}): ${rumor}`;
          rumorElement.style.color = colors[i]; // Assegna il colore
         parentElement.appendChild(rumorElement);
     });
