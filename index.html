@@ -361,6 +361,7 @@ async function createDungeonRoom(container, title, index, isExit) {
     let roomDescription = await getRandomRoomDescription();
     let specialElement = await getSpecialElement(isExit);
     let encounterContent = isExit ? await getEncounter(true) : await getEncounter();
+    let equipText = await getRandomEquip(); // Ottieni l'equipaggiamento opzionale
     // Initialize the final HTML with room description
     let finalHTML = `${roomDescription}`;
     
