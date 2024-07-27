@@ -221,16 +221,8 @@ async function showMap() {
 }
 
 async function getRandomEquip() {
-    const range = 'Equip2!A2:B40'; // Adjust the range according to your sheet's actual data
-    const equipData = await fetchFromSheet(range);
-    if (equipData.length > 0) {
-        const randomIndex = Math.floor(Math.random() * equipData.length);
-        const name = equipData[randomIndex][0];
-        const description = equipData[randomIndex][1];
-        return { name, description };
-    } else {
-        return { name: 'Nessun dato trovato', description: 'Nessuna descrizione disponibile' };
-    }
+    const range = 'Equip2!A2:A53'; // Adjust the range according to your sheet's actual data
+    return await fetchFromSheet(range);
 }
 
 async function addRumors(parentElement) {
@@ -559,8 +551,8 @@ async function rollForBiome(biome) {
             break;
     }
 
-    const equip = await getRandomEquip();
-    encounterContent += `<br><br>Equipaggiamento trovato: ${equip.name} - ${equip.description}`;
+    const equipText = await getRandomEquip();
+    encounterContent += `<br><br>Equipaggiamento trovato: ${equipText}`;
 
     
     document.getElementById('outcome').innerHTML = encounterContent;
