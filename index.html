@@ -358,28 +358,38 @@ async function createDungeonRoom(container, title, index, isExit) {
     header.innerHTML = title;
     const contentDiv = document.createElement('div');
     contentDiv.classList.add('room-content');
+
     let roomDescription = await getRandomRoomDescription();
     let specialElement = await getSpecialElement(isExit);
     let encounterContent = isExit ? await getEncounter(true) : await getEncounter();
     let equipText = await getRandomEquip(); // Ottieni l'equipaggiamento opzionale
+
     // Initialize the final HTML with room description
     let finalHTML = `${roomDescription}`;
-    
+
     // Append special element if exists, preceded by line breaks
     if (specialElement) {
         finalHTML += `<br><br>${specialElement}`;
     }
+
     // Append encounter content if exists, preceded by line breaks
     if (encounterContent) {
         finalHTML += `<br><br>${encounterContent}`;
     }
-      if (isExit || Math.random() < 0.1) {
+
+    // Append optional loot
+    finalHTML += `<br><br>${equipText}`;
+
+    // Add treasure in the room if it's an exit or randomly
+    if (isExit || Math.random() < 0.1) {
         finalHTML += `<br><br>Nella stanza c'è un tesoro`;
     }
- contentDiv.innerHTML = finalHTML;
+
+    contentDiv.innerHTML = finalHTML;
     roomDiv.appendChild(header);
     roomDiv.appendChild(contentDiv);
     container.appendChild(roomDiv);
+
     header.addEventListener("click", function() {
         this.classList.toggle("active");
         var content = this.nextElementSibling;
