@@ -220,6 +220,11 @@ async function showMap() {
   addPatrolInfo(displayContainer);
 }
 
+async function getRandomEquip() {
+    const range = 'Equip2!A2:A53'; // Adjust the range according to your sheet's actual data
+    return await fetchFromSheet(range);
+}
+
 async function addRumors(parentElement) {
     // Assicurati che questa funzione sia marcata come async
 
@@ -545,6 +550,10 @@ async function rollForBiome(biome) {
             encounterContent += "Non succede nulla";
             break;
     }
+
+    const equipText = await getRandomEquip();
+    encounterContent += `<br><br>Equipaggiamento trovato: ${equipText}`;
+
     
     document.getElementById('outcome').innerHTML = encounterContent;
     document.getElementById('outcome').style.display = 'block';
