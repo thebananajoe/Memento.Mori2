@@ -255,6 +255,20 @@ function generateUniqueRandomNumbers(count, min, max) {
     return [...numbers];
 }
 
+async function getLoot() {
+    const rangeA = 'Equip2!A2:A40'; // Intervallo per la colonna A
+    const rangeB = 'Equip2!B2:B40'; // Intervallo per la colonna B
+    const dataA = await fetchFromSheet(rangeA); // Ottieni i dati dalla colonna A
+    const dataB = await fetchFromSheet(rangeB); // Ottieni i dati dalla colonna B
+    
+    const randomIndex = Math.floor(Math.random() * dataA.length);
+    
+    const lootOpt = dataA[randomIndex][0]; // Elemento casuale della colonna A
+    const lootDesc = dataB[randomIndex][0]; // Elemento corrispondente della colonna B
+    
+    return `Loot Opt: ${lootOpt}<br>${lootDesc}`;
+}
+
 function addPatrolInfo(parentElement) {
   const facileNumbers = generateUniqueSortedNumbers(2, 8, 19);
   const medioNumbers = generateUniqueSortedNumbers(4, 8, 19);
@@ -545,6 +559,10 @@ async function rollForBiome(biome) {
             encounterContent += "Non succede nulla";
             break;
     }
+    
+     const loot = await getLoot();
+    encounterContent += `<br><br>${loot}`;
+    
     document.getElementById('outcome').innerHTML = encounterContent;
     document.getElementById('outcome').style.display = 'block';
 }
