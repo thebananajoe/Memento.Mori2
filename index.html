@@ -261,12 +261,16 @@ async function getLoot() {
     const dataA = await fetchFromSheet(rangeA); // Ottieni i dati dalla colonna A
     const dataB = await fetchFromSheet(rangeB); // Ottieni i dati dalla colonna B
     
-    const randomIndex = Math.floor(Math.random() * dataA.length);
-    
-    const lootOpt = dataA[randomIndex][0]; // Elemento casuale della colonna A
-    const lootDesc = dataB[randomIndex][0]; // Elemento corrispondente della colonna B
-    
-    return `Loot Opt: ${lootOpt}<br>${lootDesc}`;
+    if (dataA.length > 0 && dataB.length > 0) {
+        const randomIndex = Math.floor(Math.random() * dataA.length);
+        
+        const lootOpt = dataA[randomIndex]; // Elemento casuale della colonna A
+        const lootDesc = dataB[randomIndex]; // Elemento corrispondente della colonna B
+        
+        return `Loot Opt: ${lootOpt}<br>${lootDesc}`;
+    } else {
+        return 'Nessun loot trovato.';
+    }
 }
 
 function addPatrolInfo(parentElement) {
