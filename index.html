@@ -586,7 +586,7 @@ async function rollForBiome(biome) {
     }
 
     const equipText = await getRandomEquip();
-    encounterContent += `<br><br>Equipaggiamento trovato: ${equipText}`;
+    encounterContent += `<br><br>${equipText}`;
 
     
     document.getElementById('outcome').innerHTML = encounterContent;
