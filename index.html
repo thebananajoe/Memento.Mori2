@@ -224,10 +224,39 @@ async function getRandomEquip() {
     const rangeA = 'Equip2!A2:A53'; // Range per la colonna A
     const rangeB = 'Equip2!B2:B53'; // Range per la colonna B
 
-    const itemA = await fetchFromSheet(rangeA); // Ottieni un valore casuale dalla colonna A
-    const itemB = await fetchFromSheet(rangeB); // Ottieni un valore casuale dalla colonna B
+    const itemA = await fetchFromSheetWithIndex(rangeA); // Ottieni un valore casuale dalla colonna A
+    const itemB = await fetchFromSheetWithIndex(rangeB, itemA.index); // Ottieni un valore dalla stessa riga della colonna B
 
-    return `${itemA}: ${itemB}`; // Combina i due valori
+    return `${itemA.value}: ${itemB.value}`; // Combina i due valori
+}
+
+async function fetchFromSheetWithIndex(range, specificIndex = null) {
+    const sheetId = '1RIcG5KiVhPzwXaP65hoatNcbrsd713iTRITC_vemrak';
+    const apiKey = 'AIzaSyAJAV-CCleMCHj99HuZm547-AMCxpZ3HN8';
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.values && data.values.length > 0) {
+            const randomIndex = specificIndex !== null ? specificIndex : Math.floor(Math.random() * data.values.length);
+            const highlightedText = highlightKeywords(data.values[randomIndex][0]);
+            return { value: highlightedText, index: randomIndex };
+        } else {
+            return { value: 'Nessun dato trovato nella colonna specificata.', index: -1 };
+        }
+    } catch (error) {
+        console.error('Errore:', error);
+        return { value: 'Errore nel caricamento dei dati.', index: -1 };
+    }
+}
+
+function highlightKeywords(text) {
+    // Utilizza una Regular Expression per identificare parole che iniziano con "BB"
+    const regex = /\bBB(\w+)/g;
+    // Sostituisce ogni occorrenza trovata con la parola (senza BB) in grassetto
+    return text.replace(regex, function(match, p1) {
+        return `<strong>${p1}</strong>`;
+    });
 }
 
 async function addRumors(parentElement) {
