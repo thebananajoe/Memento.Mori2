@@ -221,8 +221,13 @@ async function showMap() {
 }
 
 async function getRandomEquip() {
-    const range = 'Equip2!A2:A53'; // Adjust the range according to your sheet's actual data
-    return await fetchFromSheet(range);
+    const rangeA = 'Equip2!A2:A53'; // Range per la colonna A
+    const rangeB = 'Equip2!B2:B53'; // Range per la colonna B
+
+    const itemA = await fetchFromSheet(rangeA); // Ottieni un valore casuale dalla colonna A
+    const itemB = await fetchFromSheet(rangeB); // Ottieni un valore casuale dalla colonna B
+
+    return `${itemA}: ${itemB}`; // Combina i due valori
 }
 
 async function addRumors(parentElement) {
