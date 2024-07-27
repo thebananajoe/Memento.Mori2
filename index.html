@@ -227,7 +227,7 @@ async function getRandomEquip() {
     const itemA = await fetchFromSheetWithIndex(rangeA); // Ottieni un valore casuale dalla colonna A
     const itemB = await fetchFromSheetWithIndex(rangeB, itemA.index); // Ottieni un valore dalla stessa riga della colonna B
 
-    return `${itemA.value}: ${itemB.value}`; // Combina i due valori
+    return `Optional Loot:<br><strong>${itemA.value}</strong><br>${itemB.value}`; // Combina i due valori nel formato desiderato
 }
 
 async function fetchFromSheetWithIndex(range, specificIndex = null) {
